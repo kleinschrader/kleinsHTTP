@@ -1,10 +1,5 @@
 #include <iostream>
-#include "source/socket/socket.h"
-#include "source/connection/connection.h"
-#include "source/httpParser/httpParser.h"
-
-#include "source/packet/packet.h"
-
+#include "target/debug/kleinsHTTP.h"
 int main()
 {
     std::cout << "Hello world!" << std::endl;

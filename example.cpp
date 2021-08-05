@@ -1,5 +1,5 @@
 #include <iostream>
-#include "target/debug/kleinsHTTP.h"
+#include "target/release/kleinsHTTP.h"
 int main()
 {
     std::cout << "Hello world!" << std::endl;

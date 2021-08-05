@@ -14,7 +14,10 @@ BUILDPARAMS_DBG=g++ $^ -ggdb -o $@ -c -fPIC
 debug: $(TGTDBG)/libkleinsHTTP.so $(TGTDBG)/kleinsHTTP.h $(TGTDBG)/kleinsHTTP.a
 	
 	
-release: $(TGT)/libkleinsHTTP.so $(TGT)/libkleinsHTTP.so $(TGT)/kleinsHTTP.a
+release: $(TGT)/libkleinsHTTP.so $(TGT)/kleinsHTTP.h $(TGT)/kleinsHTTP.a
+
+example: release
+	g++ -O2 -o example.o example.cpp target/release/kleinsHTTP.a -lpthread
 
 $(TGTDBG)/libkleinsHTTP.so: $(TGTDBG)/connection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socket.o 
 	g++ -shared -ggdb -o $@ $^
@@ -39,7 +42,7 @@ $(TGT)/kleinsHTTP.h: preheader.h $(LISTOFHEADERFILES)
 $(TGTDBG)/kleinsHTTP.a: $(TGTDBG)/libkleinsHTTP.so
 	ar rvs $@ $^
 
-$(TGT)/kleinsHTTP.a: $(TGT)/libkleinsHTTP.so
+$(TGT)/kleinsHTTP.a: $(TGT)/connection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socket.o
 	ar rvs $@ $^
 
 clean:

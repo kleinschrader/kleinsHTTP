@@ -3,8 +3,13 @@ LISTOFHEADERFILES= \
 	source/tcpConnection/tcpConnection.h \
 	source/httpParser/httpParser.h \
 	source/packet/packet.h \
+<<<<<<< HEAD
 	source/socketBase/socketBase.h \
 	source/tcpSocket/tcpSocket.h
+=======
+	source/socket/socket.h \
+	source/httpServer/httpServer.h
+>>>>>>> 2473fc4 (feat(httpServer): Added boilerplate for httpServer)
 
 TGT=target/release
 TGTDBG=target/debug
@@ -24,10 +29,10 @@ example: debug
 gdb: example
 	gdb example.o
 
-$(TGTDBG)/libkleinsHTTP.so: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o
+$(TGTDBG)/libkleinsHTTP.so: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o $(TGTDBG)/httpServer.o
 	g++ -shared -ggdb -o $@ $^
 
-$(TGT)/libkleinsHTTP.so: $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o
+$(TGT)/libkleinsHTTP.so: $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o $(TGT)/httpServer.o
 	g++ -shared -O2 -o $@ $^
 
 $(TGTDBG)/kleinsHTTP.h: preheader.h $(LISTOFHEADERFILES)
@@ -75,6 +80,9 @@ $(TGTDBG)/socketBase.o: source/socketBase/socketBase.cpp
 $(TGTDBG)/tcpSocket.o: source/tcpSocket/tcpSocket.cpp
 	$(BUILDPARAMS_DBG)
 
+$(TGTDBG)/httpServer.o: source/httpServer/httpServer.cpp
+	$(BUILDPARAMS_DBG)
+
 ###    RELEASE OBJECTS    ###
 
 $(TGT)/connectionBase.o: source/connectionBase/connectionBase.cpp
@@ -92,5 +100,9 @@ $(TGT)/packet.o: source/packet/packet.cpp
 $(TGT)/socketBase.o: source/socketBase/socketBase.cpp
 	$(BUILDPARAMS)
 
+<<<<<<< HEAD
 $(TGT)/tcpSocket.o: source/tcpSocket/tcpSocket.cpp
+=======
+$(TGT)/httpServer.o: source/httpServer/httpServer.cpp
+>>>>>>> 2473fc4 (feat(httpServer): Added boilerplate for httpServer)
 	$(BUILDPARAMS)

@@ -1,5 +1,6 @@
 LISTOFHEADERFILES= \
-	source/connection/connection.h \
+	source/connectionBase/connectionBase.h \
+	source/tcpConnection/tcpConnection.h \
 	source/httpParser/httpParser.h \
 	source/packet/packet.h \
 	source/socketBase/socketBase.h \
@@ -23,10 +24,10 @@ example: debug
 gdb: example
 	gdb example.o
 
-$(TGTDBG)/libkleinsHTTP.so: $(TGTDBG)/connection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o
+$(TGTDBG)/libkleinsHTTP.so: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o
 	g++ -shared -ggdb -o $@ $^
 
-$(TGT)/libkleinsHTTP.so: $(TGT)/connection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o
+$(TGT)/libkleinsHTTP.so: $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o
 	g++ -shared -O2 -o $@ $^
 
 $(TGTDBG)/kleinsHTTP.h: preheader.h $(LISTOFHEADERFILES)
@@ -43,10 +44,10 @@ $(TGT)/kleinsHTTP.h: preheader.h $(LISTOFHEADERFILES)
 		echo >> $@; \
 	done
 
-$(TGTDBG)/kleinsHTTP.a: $(TGTDBG)/connection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o
+$(TGTDBG)/kleinsHTTP.a: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o
 	ar rvs $@ $^
 
-$(TGT)/kleinsHTTP.a: $(TGT)/connection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o
+$(TGT)/kleinsHTTP.a:  $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o
 	ar rvs $@ $^
 
 clean:
@@ -56,7 +57,10 @@ clean:
 
 ###    DEBUG OBJECTS    ###
 
-$(TGTDBG)/connection.o: source/connection/connection.cpp
+$(TGTDBG)/connectionBase.o: source/connectionBase/connectionBase.cpp
+	$(BUILDPARAMS_DBG)
+
+$(TGTDBG)/tcpConnection.o: source/tcpConnection/tcpConnection.cpp
 	$(BUILDPARAMS_DBG)
 
 $(TGTDBG)/httpParser.o: source/httpParser/httpParser.cpp
@@ -73,7 +77,10 @@ $(TGTDBG)/tcpSocket.o: source/tcpSocket/tcpSocket.cpp
 
 ###    RELEASE OBJECTS    ###
 
-$(TGT)/connection.o: source/connection/connection.cpp
+$(TGT)/connectionBase.o: source/connectionBase/connectionBase.cpp
+	$(BUILDPARAMS)
+
+$(TGT)/tcpConnection.o: source/tcpConnection/tcpConnection.cpp
 	$(BUILDPARAMS)
 
 $(TGT)/httpParser.o: source/httpParser/httpParser.cpp

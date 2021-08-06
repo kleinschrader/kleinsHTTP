@@ -1,5 +1,5 @@
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#ifndef CONNECTIONBASE_H
+#define CONNECTIONBASE_H
 
 #include <thread>
 #include <sys/socket.h>
@@ -12,27 +12,25 @@
 #include "../packet/packet.h"
 
 namespace kleins {
-    class connection
+    class connectionBase
     {
     private:
-        int connectionfd;
-
-        static void ownTickLoop(connection* conn);
+        static void ownTickLoop(connectionBase* conn);
         std::thread* tickThread = 0;
 
     public:
-        connection(int connectionid);
-        ~connection();
+        connectionBase();
+        ~connectionBase();
 
-        bool getAlive();
+        virtual bool getAlive() = 0;
 
         void startOwnTickLoop();
 
-        void tick();
+        virtual void tick() = 0;
 
-        void sendData(const char* data, int datalength);
+        virtual void sendData(const char* data, int datalength) = 0;
 
-        void close_socket();
+        virtual void close_socket() = 0;
 
         void join();
 

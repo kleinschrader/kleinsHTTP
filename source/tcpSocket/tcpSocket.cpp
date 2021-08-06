@@ -1,6 +1,7 @@
 #include "tcpSocket.h"
 
-kleins::tcpSocket::tcpSocket(const char* listenAddress, const int listenPort)
+template <class T>
+kleins::tcpSocket<T>::tcpSocket(const char* listenAddress, const int listenPort)
 {
     address.sin_family = AF_INET;
 
@@ -8,23 +9,26 @@ kleins::tcpSocket::tcpSocket(const char* listenAddress, const int listenPort)
     inet_aton(listenAddress, (in_addr *)&address.sin_addr.s_addr);
 }
 
-kleins::tcpSocket::~tcpSocket()
+template <class T>
+kleins::tcpSocket<T>::~tcpSocket()
 {
     close(socketfd);
 }
 
-bool kleins::tcpSocket::tick()
+template <class T>
+bool kleins::tcpSocket<T>::tick()
 {
     int newConnection;
     
     newConnection = accept(socketfd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
-    connection* conn = new connection(newConnection);
+    T* conn = new T(newConnection);
     newConnectionCallback(conn); 
     
     return newConnection;
 }
 
-std::future<bool> kleins::tcpSocket::init()
+template <class T>
+std::future<bool> kleins::tcpSocket<T>::init()
 {
     auto init_async = [this](){
         socketfd = socket(AF_INET,SOCK_STREAM,0);
@@ -60,3 +64,5 @@ std::future<bool> kleins::tcpSocket::init()
 
     return std::async(std::launch::async,init_async);
 }
+
+template class kleins::tcpSocket<kleins::tcpConnection>;

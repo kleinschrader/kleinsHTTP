@@ -1,7 +1,8 @@
 namespace kleins {
     class packet;
-    class connection;
+    class connectionBase;
+    class tcpConnection;
     class httpParser;
-    class socket;
+    class socketBase;
 }
 

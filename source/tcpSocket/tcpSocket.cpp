@@ -1,4 +1,4 @@
-#include "socket.h"
+#include "tcpSocket.h"
 
 kleins::tcpSocket::tcpSocket(const char* listenAddress, const int listenPort)
 {
@@ -13,15 +13,15 @@ kleins::tcpSocket::~tcpSocket()
     close(socketfd);
 }
 
-void kleins::tcpSocket::connectionLoop(tcpSocket* socket)
+bool kleins::tcpSocket::tick()
 {
     int newConnection;
-    std::cout << "Ready for connections" << std::endl;
-    do {
-        newConnection = accept(socket->socketfd, (struct sockaddr *)&socket->address, (socklen_t*)&socket->addrlen);
-        connection* conn = new connection(newConnection);
-        socket->newConnectionCallback(conn); 
-    } while(newConnection);
+    
+    newConnection = accept(socketfd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+    connection* conn = new connection(newConnection);
+    newConnectionCallback(conn); 
+    
+    return newConnection;
 }
 
 std::future<bool> kleins::tcpSocket::init()
@@ -53,7 +53,7 @@ std::future<bool> kleins::tcpSocket::init()
 
         addrlen = sizeof(address);
 
-        connectionThread = new std::thread(connectionLoop, this);
+        startTicks();
 
         return true;
     };

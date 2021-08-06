@@ -3,6 +3,7 @@
 kleins::connection::connection(int connectionid)
 {
     connectionfd = connectionid;
+    delete tickThread;
 }
 
 kleins::connection::~connection()

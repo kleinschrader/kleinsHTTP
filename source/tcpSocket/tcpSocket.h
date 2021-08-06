@@ -1,3 +1,6 @@
+#ifndef TCPSOCKET_H
+#define TCPSOCKET_H
+
 #include <sys/socket.h>
 #include <future>
 #include <iostream>
@@ -6,11 +9,11 @@
 #include <thread>
 
 #include "../connection/connection.h"
-
+#include "../socketBase/socketBase.h"
 
 namespace kleins {
 
-    class tcpSocket
+    class tcpSocket : private socketBase
     {
     private:
         int socketfd;
@@ -18,8 +21,7 @@ namespace kleins {
         struct sockaddr_in address;
         int addrlen;
 
-        static void connectionLoop(tcpSocket* socket);
-        std::thread* connectionThread;
+        bool tick();
 
     public:
         tcpSocket(const char* listenAddress, const int listenPort);
@@ -31,3 +33,5 @@ namespace kleins {
     };
     
 }
+
+#endif

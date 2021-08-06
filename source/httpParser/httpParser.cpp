@@ -1,6 +1,6 @@
 #include "httpParser.h"
 
-kleins::httpParser::httpParser(packet* httpdata, connection* conn)
+kleins::httpParser::httpParser(packet* httpdata, connectionBase* conn)
 {
     data = httpdata;
     connsocket = conn;

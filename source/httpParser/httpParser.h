@@ -6,17 +6,17 @@
 #include <map>
 
 #include "../packet/packet.h"
-#include "../connection/connection.h"
+#include "../connectionBase/connectionBase.h"
 
 namespace kleins {
     class httpParser
     {
     private:
         packet* data;
-        connection* connsocket;
+        connectionBase* connsocket;
         std::map<std::string,const std::function<void(httpParser*)>> functionTable;
     public:
-        httpParser(packet* httpdata, connection* conn);
+        httpParser(packet* httpdata, connectionBase* conn);
         ~httpParser();
 
         bool parse();

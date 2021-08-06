@@ -8,12 +8,15 @@
 #include <arpa/inet.h>
 #include <thread>
 
-#include "../connection/connection.h"
+
+#include "../tcpConnection/tcpConnection.h"
 #include "../socketBase/socketBase.h"
 
-namespace kleins {
 
-    class tcpSocket : private socketBase
+
+namespace kleins {
+    template <class T>
+    class tcpSocket : public socketBase
     {
     private:
         int socketfd;
@@ -27,11 +30,11 @@ namespace kleins {
         tcpSocket(const char* listenAddress, const int listenPort);
         ~tcpSocket();
 
-        std::function<void(connection*)> newConnectionCallback;
+        std::function<void(T*)> newConnectionCallback;
 
         std::future<bool> init();
     };
     
-}
+};
 
 #endif

@@ -56,3 +56,7 @@ If you have a better idea for a name plase create a issue with the suggestion.
 ### How can i contact you?
 
 Make an issue or contact me via Discord (kleins#9003) / [Twitter (@kleinschrader)](https://twitter.com/kleinschrader)
+
+### Does this libary support HTTPS?
+
+Not yet.

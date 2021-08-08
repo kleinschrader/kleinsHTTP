@@ -15,7 +15,6 @@
 
 
 namespace kleins {
-    template <class T>
     class tcpSocket : public socketBase
     {
     private:
@@ -29,8 +28,6 @@ namespace kleins {
     public:
         tcpSocket(const char* listenAddress, const int listenPort);
         ~tcpSocket();
-
-        std::function<void(T*)> newConnectionCallback;
 
         std::future<bool> init();
     };

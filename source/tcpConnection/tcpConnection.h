@@ -26,8 +26,6 @@ namespace kleins {
         virtual void tick();
         virtual void sendData(const char* data, int datalength);
         virtual void close_socket();
-
-        std::function<void(std::unique_ptr<packet>)> onRecieveCallback;
     };
 };
 

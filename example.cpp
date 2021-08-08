@@ -3,38 +3,15 @@
 int main()
 {
     std::cout << "Hello world!" << std::endl;
-    kleins::tcpSocket<kleins::tcpConnection> socket("127.0.0.1",8080);
-
-    auto socketFuture = socket.init();
-
-    socket.newConnectionCallback = [](kleins::tcpConnection* conn){
-        
-        conn->onRecieveCallback = [conn](std::unique_ptr<kleins::packet> packet){
-            std::unique_ptr<kleins::httpParser> parser = std::make_unique<kleins::httpParser>(packet.get(),conn);
-
-            parser.get()->on("GET","/", [](kleins::httpParser* data){
-                data->respond("200",{
-                    "content-type:text/html; charset=UTF-8",
-                },"Hello!");
-            });
-
-            if(!parser.get()->parse())
-            {
-                std::cout << "Error parsing http" << std::endl;
-            }
-        };
-
-        conn->startOwnTickLoop();
-        conn->join();
-
-        delete conn;
-    };
-
-    if(!socketFuture.get())
-    {
-        return 1;
-    };
     
+    kleins::httpServer server;
+    server.addSocket(new kleins::tcpSocket("0.0.0.0",8080));
+
+    server.on("GET","/",[](kleins::httpParser* data){
+        data->respond("200",{},"Hello!");
+    });
+
     std::cin.get();
+
     return 0;
 }

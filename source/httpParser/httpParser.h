@@ -22,6 +22,7 @@ namespace kleins {
         bool parse();
 
         void on(const std::string& method,const std::string& uri, const std::function<void(httpParser*)> callback);
+        void on(const std::string& ref, const std::function<void(httpParser*)> callback);
 
         void respond(const std::string& status, const std::list<std::string>& responseHeaders, const std::string& body);
 

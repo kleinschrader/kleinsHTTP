@@ -4,7 +4,8 @@ LISTOFHEADERFILES= \
 	source/httpParser/httpParser.h \
 	source/packet/packet.h \
 	source/socketBase/socketBase.h \
-	source/tcpSocket/tcpSocket.h
+	source/tcpSocket/tcpSocket.h \
+	source/httpServer/httpServer.h
 
 TGT=target/release
 TGTDBG=target/debug
@@ -24,10 +25,10 @@ example: debug
 gdb: example
 	gdb example.o
 
-$(TGTDBG)/libkleinsHTTP.so: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o
+$(TGTDBG)/libkleinsHTTP.so: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o $(TGTDBG)/httpServer.o
 	g++ -shared -ggdb -o $@ $^
 
-$(TGT)/libkleinsHTTP.so: $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o
+$(TGT)/libkleinsHTTP.so: $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o $(TGT)/httpServer.o
 	g++ -shared -O2 -o $@ $^
 
 $(TGTDBG)/kleinsHTTP.h: preheader.h $(LISTOFHEADERFILES)
@@ -44,10 +45,10 @@ $(TGT)/kleinsHTTP.h: preheader.h $(LISTOFHEADERFILES)
 		echo >> $@; \
 	done
 
-$(TGTDBG)/kleinsHTTP.a: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o
+$(TGTDBG)/kleinsHTTP.a: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o $(TGTDBG)/httpServer.o
 	ar rvs $@ $^
 
-$(TGT)/kleinsHTTP.a:  $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o
+$(TGT)/kleinsHTTP.a:  $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o $(TGT)/httpServer.o
 	ar rvs $@ $^
 
 clean:
@@ -75,6 +76,9 @@ $(TGTDBG)/socketBase.o: source/socketBase/socketBase.cpp
 $(TGTDBG)/tcpSocket.o: source/tcpSocket/tcpSocket.cpp
 	$(BUILDPARAMS_DBG)
 
+$(TGTDBG)/httpServer.o: source/httpServer/httpServer.cpp
+	$(BUILDPARAMS_DBG)
+
 ###    RELEASE OBJECTS    ###
 
 $(TGT)/connectionBase.o: source/connectionBase/connectionBase.cpp
@@ -93,4 +97,7 @@ $(TGT)/socketBase.o: source/socketBase/socketBase.cpp
 	$(BUILDPARAMS)
 
 $(TGT)/tcpSocket.o: source/tcpSocket/tcpSocket.cpp
+	${BUILDPARAMS}
+
+$(TGT)/httpServer.o: source/httpServer/httpServer.cpp
 	$(BUILDPARAMS)

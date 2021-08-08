@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <thread>
 
+#include "../connectionBase/connectionBase.h"
 
 namespace kleins {
 
@@ -20,12 +21,13 @@ namespace kleins {
 
         virtual bool tick() = 0;
 
-        void startTicks();
-
     public:
         socketBase();
         ~socketBase();
 
+        void startTicks();
+
+        std::function<void(connectionBase*)> newConnectionCallback;
         virtual std::future<bool> init() = 0;
     };
     

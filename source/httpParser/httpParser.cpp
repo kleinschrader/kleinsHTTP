@@ -100,7 +100,6 @@ bool kleins::httpParser::parse()
     else
     {
         connsocket->sendData("HTTP/1.0 404\r\ncontent-type:text/html; charset=UTF-8\r\n\r\n<html><head></head><body>Not found</body></html>\r\n",104);
-        connsocket->close_socket();
     }
     
     return true;
@@ -145,6 +144,4 @@ void kleins::httpParser::respond(const std::string& status,const std::list<std::
     finalTarget = response.str();
     
     connsocket->sendData(finalTarget.c_str(),finalTarget.length());
-
-    connsocket->close_socket();
 }

@@ -1,2 +1,4 @@
 target/
 example.o
+example.key
+example.crt

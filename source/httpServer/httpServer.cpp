@@ -18,7 +18,10 @@ bool kleins::httpServer::addSocket(socketBase* socket)
     auto socketInitFuture = socket->init();
 
     socket->newConnectionCallback = [this](connectionBase* conn){
-        this->newConnection(conn);        
+        if(conn->getAlive())
+        {
+            this->newConnection(conn);
+        } 
     };
 
     if(socketInitFuture.get())
@@ -39,7 +42,7 @@ void kleins::httpServer::newConnection(kleins::connectionBase* conn) {
         {
             parser->on(cb.first,cb.second);
         }
-        
+
         parser.get()->parse();
 
         conn->close_socket();

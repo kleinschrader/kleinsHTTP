@@ -5,7 +5,9 @@ LISTOFHEADERFILES= \
 	source/packet/packet.h \
 	source/socketBase/socketBase.h \
 	source/tcpSocket/tcpSocket.h \
-	source/httpServer/httpServer.h
+	source/httpServer/httpServer.h \
+	source/sslSocket/sslSocket.h \
+	source/sslConnection/sslConnection.h
 
 TGT=target/release
 TGTDBG=target/debug
@@ -19,16 +21,19 @@ debug: $(TGTDBG)/libkleinsHTTP.so $(TGTDBG)/kleinsHTTP.h $(TGTDBG)/kleinsHTTP.a
 	
 release: $(TGT)/libkleinsHTTP.so $(TGT)/kleinsHTTP.h $(TGT)/kleinsHTTP.a
 
-example: debug
-	g++ -ggdb -o example.o example.cpp target/debug/kleinsHTTP.a -lpthread
+example: debug example-cert
+	g++ -ggdb -o example.o example.cpp target/debug/kleinsHTTP.a -lpthread -lssl -lcrypto
+
+example-cert:
+	openssl req -new -x509 -subj "/C=DE/ST=Hamburg/L=Hamburg/O=kleinsHTTP DEV/OU=DEV/CN=localhost/emailAddress=kleinsHTTP@example.com" -days 365 -nodes -out example.crt -keyout example.key
 
 gdb: example
 	gdb example.o
 
-$(TGTDBG)/libkleinsHTTP.so: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o $(TGTDBG)/httpServer.o
+$(TGTDBG)/libkleinsHTTP.so: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o $(TGTDBG)/httpServer.o $(TGTDBG)/sslSocket.o $(TGTDBG)/sslConnection.o
 	g++ -shared -ggdb -o $@ $^
 
-$(TGT)/libkleinsHTTP.so: $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o $(TGT)/httpServer.o
+$(TGT)/libkleinsHTTP.so: $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o $(TGT)/httpServer.o ${TGT}/sslSocket.o $(TGT)/sslConnection.o
 	g++ -shared -O2 -o $@ $^
 
 $(TGTDBG)/kleinsHTTP.h: preheader.h $(LISTOFHEADERFILES)
@@ -45,10 +50,10 @@ $(TGT)/kleinsHTTP.h: preheader.h $(LISTOFHEADERFILES)
 		echo >> $@; \
 	done
 
-$(TGTDBG)/kleinsHTTP.a: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o $(TGTDBG)/httpServer.o
+$(TGTDBG)/kleinsHTTP.a: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o $(TGTDBG)/httpServer.o $(TGTDBG)/sslSocket.o $(TGTDBG)/sslConnection.o
 	ar rvs $@ $^
 
-$(TGT)/kleinsHTTP.a:  $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o $(TGT)/httpServer.o
+$(TGT)/kleinsHTTP.a:  $(TGT)/connectionBase.o $(TGT)/tcpConnection.o $(TGT)/httpParser.o $(TGT)/packet.o $(TGT)/socketBase.o $(TGT)/tcpSocket.o $(TGT)/httpServer.o $(TGT)/sslSocket.o $(TGT)/sslConnection.o
 	ar rvs $@ $^
 
 clean:
@@ -79,6 +84,11 @@ $(TGTDBG)/tcpSocket.o: source/tcpSocket/tcpSocket.cpp
 $(TGTDBG)/httpServer.o: source/httpServer/httpServer.cpp
 	$(BUILDPARAMS_DBG)
 
+$(TGTDBG)/sslSocket.o: source/sslSocket/sslSocket.cpp
+	$(BUILDPARAMS_DBG)
+
+$(TGTDBG)/sslConnection.o: source/sslConnection/sslConnection.cpp
+	$(BUILDPARAMS_DBG)
 ###    RELEASE OBJECTS    ###
 
 $(TGT)/connectionBase.o: source/connectionBase/connectionBase.cpp
@@ -100,4 +110,10 @@ $(TGT)/tcpSocket.o: source/tcpSocket/tcpSocket.cpp
 	${BUILDPARAMS}
 
 $(TGT)/httpServer.o: source/httpServer/httpServer.cpp
+	$(BUILDPARAMS)
+
+$(TGT)/sslSocket.o: source/sslSocket/sslSocket.cpp
+	$(BUILDPARAMS)
+
+$(TGT)/sslConnection.o: source/sslConnection/sslConnection.cpp
 	$(BUILDPARAMS)

@@ -59,4 +59,4 @@ Make an issue or contact me via Discord (kleins#9003) / [Twitter (@kleinschrader
 
 ### Does this libary support HTTPS?
 
-Not yet.
+Yes, check the example for more info.

@@ -121,7 +121,7 @@ void kleins::httpParser::on(const std::string& ref, const std::function<void(kle
     functionTable.insert(std::make_pair(ref,callback));
 }
 
-void kleins::httpParser::respond(const std::string& status,const std::list<std::string>& responseHeaders,const std::string& body)
+void kleins::httpParser::respond(const std::string& status,const std::list<std::string>& responseHeaders,const std::string& body,  const std::string& mimeType)
 {
     std::stringstream response;
     
@@ -134,7 +134,7 @@ void kleins::httpParser::respond(const std::string& status,const std::list<std::
     }
 
     response << "content-length: " << body.size()+2 << "\r\n";
-    response << "Content-Type: text/html; charset=utf-8" << "\r\n";
+    response << "Content-Type: " << mimeType << "; charset=utf-8" << "\r\n";
     response << "Server: kleinsHTTP" << "\r\n";
 
 

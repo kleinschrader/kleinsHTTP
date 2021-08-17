@@ -60,10 +60,10 @@ void kleins::httpServer::newConnection(kleins::connectionBase* conn) {
         conn->startOwnTickLoop();
     }
 
-    std::async(std::launch::async,[conn](){
+    std::thread([conn](){
         conn->join();
         delete conn;
-    });
+    }).detach();
 }
 
 void kleins::httpServer::on(const std::string& method,const std::string& uri, const std::function<void(httpParser*)> callback)

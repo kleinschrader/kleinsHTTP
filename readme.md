@@ -60,3 +60,7 @@ Make an issue or contact me via Discord (kleins#9003) / [Twitter (@kleinschrader
 ### Does this libary support HTTPS?
 
 Yes, check the example for more info.
+
+### Can i use this project to serve static files.
+
+Only manually for now.

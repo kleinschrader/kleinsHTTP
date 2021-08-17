@@ -12,7 +12,7 @@ LISTOFHEADERFILES= \
 TGT=target/release
 TGTDBG=target/debug
 
-LIBS=-lssl -lcrypto -lpthread
+LIBS= -lssl -lcrypto -lpthread
 
 BUILDPARAMS=g++ -std=c++17 $^ -O2 -o $@ -c -fPIC 
 BUILDPARAMS_DBG=g++ -std=c++17 $^ -ggdb -o $@ -c -fPIC

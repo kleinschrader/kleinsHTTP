@@ -1,4 +1,5 @@
-target/
+target/debug/*
+target/release/*
 example.o
 example.key
 example.crt

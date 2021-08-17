@@ -1,5 +1,6 @@
 target/debug/*
 target/release/*
+!.blank
 example.o
 example.key
 example.crt

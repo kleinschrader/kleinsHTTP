@@ -13,13 +13,18 @@ TGT=target/release
 TGTDBG=target/debug
 
 BUILDPARAMS=g++ $^ -O2 -o $@ -c -fPIC 
-BUILDPARAMS_DBG=g++ $^ -ggdb -o $@ -c -fPIC 
+BUILDPARAMS_DBG=g++ $^ -ggdb -o $@ -c -fPIC
+
+VERSION=0.1.0
 
 
 debug: $(TGTDBG)/libkleinsHTTP.so $(TGTDBG)/kleinsHTTP.h $(TGTDBG)/kleinsHTTP.a
 	
 	
 release: $(TGT)/libkleinsHTTP.so $(TGT)/kleinsHTTP.h $(TGT)/kleinsHTTP.a
+
+package: release
+	tar -czvf $(TGT)/kleinsHTTP-v$(VERSION).tar.gz $(TGT)/kleinsHTTP.h $(TGT)/kleinsHTTP.a $(TGT)/libkleinsHTTP.so
 
 example: debug example-cert
 	g++ -ggdb -o example.o example.cpp target/debug/kleinsHTTP.a -lpthread -lssl -lcrypto

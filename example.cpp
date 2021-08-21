@@ -1,5 +1,6 @@
 #include <iostream>
 #include "target/debug/kleinsHTTP.h"
+
 int main()
 {
     std::cout << "Hello world!" << std::endl;
@@ -14,7 +15,18 @@ int main()
 
     server.on("GET","/hello",[](kleins::httpParser* data){
         std::stringstream response;
-        response << "Hello " << data->parameters["name"] << "!";
+        response << "Hello " << data->parameters["name"] << "! ";
+
+        response << "This is " << data->headers["Host"];
+        
+        data->respond("200",{},response.str());
+    });
+
+    server.on("POST","/hello",[](kleins::httpParser* data){
+        std::stringstream response;
+        response << "Hello " << data->parameters["name"] << "! ";
+
+        response << "This is " << data->headers["Host"];
         
         data->respond("200",{},response.str());
     });

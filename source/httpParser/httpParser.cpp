@@ -57,6 +57,15 @@ bool kleins::httpParser::parse()
     body = data->data.substr(nextline);
 
     parseRequestline();
+    parseHeaders();
+
+    if(method == "POST")
+    {
+        if(headers["content-type"] == "application/x-www-form-urlencoded")
+        {
+            parseURLencodedData(body);
+        }
+    }
 
     std::string ref;
 

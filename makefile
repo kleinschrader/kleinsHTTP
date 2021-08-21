@@ -17,8 +17,7 @@ LIBS= -lssl -lcrypto -lpthread
 BUILDPARAMS=g++ -std=c++17 $^ -O2 -o $@ -c -fPIC 
 BUILDPARAMS_DBG=g++ -std=c++17 $^ -ggdb -o $@ -c -fPIC
 
-VERSION=0.1.1-rc0
-
+VERSION=0.1.1
 
 debug: $(TGTDBG)/libkleinsHTTP.so $(TGTDBG)/kleinsHTTP.h $(TGTDBG)/kleinsHTTP.a
 	

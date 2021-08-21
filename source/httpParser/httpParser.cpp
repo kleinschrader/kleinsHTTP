@@ -129,9 +129,6 @@ void kleins::httpParser::parseRequestline()
 
     memset(bufferData,0,(length + 1) * 3);
 
-
-    std::cout << requestline << std::endl;
-
     enum REQUESTLINE_STATES {
         REUQESTLINE_STATE_METHOD,
         REUQESTLINE_STATE_PATH,
@@ -277,6 +274,81 @@ void kleins::httpParser::parseURLencodedData(const char* rawData, const int leng
         parameters.insert(
                         std::make_pair(std::string(keyBuffer),std::string(valueBuffer))
         );
+    }
+
+    delete [] buffer;
+}
+
+void kleins::httpParser::parseHeaders()
+{
+    enum parseState {
+        PARSE_STATE_KEY,
+        PARSE_STATE_VALUE,
+    };
+
+    int length = header.length();
+
+    int offsetCounter = 0;
+    uint8_t currentState = PARSE_STATE_KEY;
+
+    char* buffer = new char[(length+1)*2];
+    memset(buffer, 0, (length+1)*2);
+
+    char* keyBuffer = buffer;
+    char* valueBuffer = buffer + length + 1;
+
+    bool skipNext = false;
+    for(auto x : header)
+    {
+        if(skipNext)
+        {
+            skipNext = false;
+            continue;
+        }
+
+        switch(currentState)
+        {
+            case PARSE_STATE_KEY:
+
+                if(x != ':')
+                {
+                    keyBuffer[offsetCounter++] = x;
+                }
+                else
+                {
+                    skipNext = true;
+                    offsetCounter = 0;
+                    currentState = PARSE_STATE_VALUE;
+                }
+
+                break;
+            
+            case PARSE_STATE_VALUE:
+
+                if(x != '\x0D')
+                {
+                    valueBuffer[offsetCounter++] = x;
+                }
+                else
+                {
+                    skipNext = true;
+                    offsetCounter = 0;
+                    currentState = PARSE_STATE_KEY;
+
+                    headers.insert(std::make_pair(
+                        std::string(keyBuffer),
+                        std::string(valueBuffer)
+                    ));
+
+                    memset(buffer, 0, (length+1)*2);
+                }
+
+                break;
+            
+            default:
+                break;
+        }
+
     }
 
     delete [] buffer;

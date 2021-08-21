@@ -17,6 +17,7 @@ namespace kleins {
         std::map<std::string,const std::function<void(httpParser*)>> functionTable;
 
         inline void parseRequestline();
+        inline void parseHeaders();
 
         void parseURLencodedData(const char* rawData);
         void parseURLencodedData(std::string& rawData);
@@ -39,6 +40,7 @@ namespace kleins {
         std::string method;
         std::string path;
         std::map<std::string, std::string> parameters;
+        std::map<std::string, std::string> headers;
     };    
 }
 

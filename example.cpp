@@ -12,6 +12,13 @@ int main()
         data->respond("200",{},"Hello!");
     });
 
+    server.on("GET","/hello",[](kleins::httpParser* data){
+        std::stringstream response;
+        response << "Hello " << data->parameters["name"] << "!";
+        
+        data->respond("200",{},response.str());
+    });
+
     std::cin.get();
 
     return 0;

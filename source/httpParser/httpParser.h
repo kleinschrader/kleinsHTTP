@@ -15,6 +15,12 @@ namespace kleins {
         packet* data;
         connectionBase* connsocket;
         std::map<std::string,const std::function<void(httpParser*)>> functionTable;
+
+        inline void parseRequestline();
+
+        void parseURLencodedData(const char* rawData);
+        void parseURLencodedData(std::string& rawData);
+        void parseURLencodedData(const char* rawData, const int length);
     public:
         httpParser(packet* httpdata, connectionBase* conn);
         ~httpParser();
@@ -31,7 +37,8 @@ namespace kleins {
         std::string body;
 
         std::string method;
-        std::string uri;
+        std::string path;
+        std::map<std::string, std::string> parameters;
     };    
 }
 

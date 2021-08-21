@@ -56,41 +56,12 @@ bool kleins::httpParser::parse()
 
     body = data->data.substr(nextline);
 
-    for(int i = 0; i < requestline.length(); i++)
-    {
-        if(i >= requestline.length())
-            return false;
-
-        if(requestline[i] != ' ')
-            continue;
-        
-        method = requestline.substr(0,i);
-
-        nextline = i+1;
-
-        break;
-    }
-
-    for(int i = nextline; i < requestline.length(); i++)
-    {
-        if(i >= requestline.length())
-            return false;
-
-        if(requestline[i] != ' ')
-            continue;
-        
-        uri = requestline.substr(nextline,i - nextline);
-
-        nextline = i+1;
-
-        break;
-    }
+    parseRequestline();
 
     std::string ref;
-    ref.reserve(method.length() + uri.length() + 1);
 
     ref = method;
-    ref.append(uri);
+    ref.append(path);
 
     auto search = functionTable.find(ref);
     if(search != functionTable.end())
@@ -144,4 +115,169 @@ void kleins::httpParser::respond(const std::string& status,const std::list<std::
     finalTarget = response.str();
     
     connsocket->sendData(finalTarget.c_str(),finalTarget.length());
+}
+
+void kleins::httpParser::parseRequestline()
+{
+    const int length = requestline.length();
+
+    char* bufferData = new char[(length + 1) * 3];
+
+    char* methodBuffer = bufferData;
+    char* pathBuffer = bufferData + ((length + 1) * 1);
+    char* variableBuffer = bufferData + ((length + 1) * 2);
+
+    memset(bufferData,0,(length + 1) * 3);
+
+
+    std::cout << requestline << std::endl;
+
+    enum REQUESTLINE_STATES {
+        REUQESTLINE_STATE_METHOD,
+        REUQESTLINE_STATE_PATH,
+        REQUESTLINE_STATE_PARAM,
+        REQUESTLINE_STATE_UNPARSABLE,
+    };
+
+    int requestlineState = REUQESTLINE_STATE_METHOD;
+    int offsetCounter = 0;
+    for(auto x : requestline)
+    {
+        auto storeInBuffer = [x,&offsetCounter](char* b){
+            b[offsetCounter++] = x;
+        };
+
+
+        switch (requestlineState)
+        {
+
+        case REUQESTLINE_STATE_METHOD:
+            
+            if(x != ' ')
+            {
+                storeInBuffer(methodBuffer);
+            }
+            else
+            {
+                offsetCounter = 0;
+                requestlineState = REUQESTLINE_STATE_PATH;
+            }
+            
+            break;
+        
+        case REUQESTLINE_STATE_PATH:
+            
+            if(x != ' ' && x != '?')
+            {
+                storeInBuffer(pathBuffer);
+            }
+            else
+            {
+                offsetCounter = 0;
+                requestlineState = REQUESTLINE_STATE_PARAM;
+            }
+            
+            break;
+        
+        case REQUESTLINE_STATE_PARAM:
+
+            if(x != ' ')
+            {
+                storeInBuffer(variableBuffer);
+            }
+            else
+            {
+                offsetCounter = 0;
+                requestlineState = REQUESTLINE_STATE_UNPARSABLE;
+            }
+
+            break;
+        default:
+            break;
+        }
+    }
+
+    parseURLencodedData(variableBuffer);
+
+    method = methodBuffer;
+    path = pathBuffer;
+
+    delete [] bufferData;
+}
+
+void kleins::httpParser::parseURLencodedData(const char* rawData)
+{
+    const int length = strlen(rawData);
+    parseURLencodedData(rawData,length);
+}
+
+void kleins::httpParser::parseURLencodedData(std::string& rawData)
+{
+    parseURLencodedData(rawData.c_str(),rawData.length());
+}
+
+void kleins::httpParser::parseURLencodedData(const char* rawData, const int length)
+{
+    enum parseState {
+        PARSE_STATE_KEY,
+        PARSE_STATE_VALUE,
+    };
+
+    int offsetCounter = 0;
+    uint8_t currentState = PARSE_STATE_KEY;
+
+    char* buffer = new char[(length+1)*2];
+    memset(buffer, 0, (length+1)*2);
+
+    char* keyBuffer = buffer;
+    char* valueBuffer = buffer + length + 1;
+
+    for(int i = 0; i < length; i++)
+    {
+        switch(currentState) {
+
+            case PARSE_STATE_KEY:
+                if(rawData[i] != '=')
+                {
+                    keyBuffer[offsetCounter++] = rawData[i];
+                }
+                else
+                {
+                    offsetCounter = 0;
+                    currentState = PARSE_STATE_VALUE;
+                }
+
+                break;
+
+            case PARSE_STATE_VALUE:
+                if(rawData[i] != '&')
+                {
+                    valueBuffer[offsetCounter++] = rawData[i];
+                }
+                else
+                {
+                    offsetCounter = 0;
+                    currentState = PARSE_STATE_KEY;
+
+                    parameters.insert(
+                        std::make_pair(std::string(keyBuffer),std::string(valueBuffer))
+                    );
+                    
+                    memset(buffer, 0, (length+1)*2);
+                }
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    if(currentState == PARSE_STATE_VALUE) {
+        parameters.insert(
+                        std::make_pair(std::string(keyBuffer),std::string(valueBuffer))
+        );
+    }
+
+    delete [] buffer;
 }

@@ -100,16 +100,16 @@ void kleins::httpServer::serve(const std::string& uri, const std::string& path)
 
     on("GET",uri,[this](httpParser* parser){
         
-        std::string extension = std::filesystem::path(parser->uri).extension();
+        std::string extension = std::filesystem::path(parser->path).extension();
         std::string mimetype = mimeLookup[extension];
 
         if(mimeLookup.find(extension) != mimeLookup.end())
         {
-            parser->respond("200",{},fileLookup[parser->uri],mimetype);
+            parser->respond("200",{},fileLookup[parser->path],mimetype);
         }
         else
         {
-            parser->respond("200",{},fileLookup[parser->uri]);
+            parser->respond("200",{},fileLookup[parser->path]);
         }
     });
 }
@@ -136,7 +136,7 @@ void kleins::httpServer::serveDirectory(const std::string& baseuri, const std::s
             if(incompletePath.length() != 0)
             {
                 on("GET",incompletePath,[](httpParser* parser){
-                    std::string locationHeader = "Location: " + parser->uri + "/";
+                    std::string locationHeader = "Location: " + parser->path + "/";
                     parser->respond("301",
                         {locationHeader},
                         ""

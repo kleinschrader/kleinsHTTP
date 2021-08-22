@@ -1,32 +1,30 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
-#include <thread>
-#include <sys/socket.h>
-#include <unistd.h>
+#include <future>
 #include <iostream>
 #include <list>
-#include <future>
+#include <sys/socket.h>
+#include <thread>
 #include <unistd.h>
 
 #include "../connectionBase/connectionBase.h"
 #include "../packet/packet.h"
 
 namespace kleins {
-    class tcpConnection : public connectionBase
-    {
-    private:
-        int connectionfd;
+class tcpConnection : public connectionBase {
+private:
+  int connectionfd;
 
-    public:
-        tcpConnection(int connectionid);
-        ~tcpConnection();
+public:
+  tcpConnection(int connectionid);
+  ~tcpConnection();
 
-        virtual bool getAlive();
-        virtual void tick();
-        virtual void sendData(const char* data, int datalength);
-        virtual void close_socket();
-    };
+  virtual bool getAlive();
+  virtual void tick();
+  virtual void sendData(const char *data, int datalength);
+  virtual void close_socket();
 };
+}; // namespace kleins
 
 #endif

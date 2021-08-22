@@ -1,41 +1,39 @@
 #ifndef CONNECTIONBASE_H
 #define CONNECTIONBASE_H
 
-#include <thread>
-#include <sys/socket.h>
-#include <unistd.h>
+#include <future>
 #include <iostream>
 #include <list>
-#include <future>
+#include <sys/socket.h>
+#include <thread>
 #include <unistd.h>
 
 #include "../packet/packet.h"
 
 namespace kleins {
-    class connectionBase
-    {
-    private:
-        static void ownTickLoop(connectionBase* conn);
-        std::thread* tickThread = 0;
+class connectionBase {
+private:
+  static void ownTickLoop(connectionBase *conn);
+  std::thread *tickThread = 0;
 
-    public:
-        connectionBase();
-        ~connectionBase();
+public:
+  connectionBase();
+  ~connectionBase();
 
-        virtual bool getAlive() = 0;
+  virtual bool getAlive() = 0;
 
-        void startOwnTickLoop();
+  void startOwnTickLoop();
 
-        virtual void tick() = 0;
+  virtual void tick() = 0;
 
-        virtual void sendData(const char* data, int datalength) = 0;
+  virtual void sendData(const char *data, int datalength) = 0;
 
-        virtual void close_socket() = 0;
+  virtual void close_socket() = 0;
 
-        void join();
+  void join();
 
-        std::function<void(std::unique_ptr<packet>)> onRecieveCallback;
-    };
-}
+  std::function<void(std::unique_ptr<packet>)> onRecieveCallback;
+};
+} // namespace kleins
 
 #endif

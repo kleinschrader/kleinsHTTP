@@ -1,7 +1,88 @@
 #include "httpServer.h"
 
 std::map<std::string, std::string> kleins::httpServer::mimeLookup = {
-    {".html", "text/html"}, {".css", "text/css"}, {".js", "text/javascript"}, {".svg", "image/svg+xml"}};
+
+    /*
+    * Common mime types
+    * Source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+    */
+
+    /* AAC Audio                    */ {".aac", "audio/aac"},
+    /* AbiWord document             */ {".abw", "application/x-abiword"},
+    /* Archive document             */ {".arc", "application/x-freearc"},
+    /* AVI: Audio Video Interleave  */ {".avi", "video/x-msvideo"},
+    /* Amazon Kindle eBook format   */ {".azw", "application/vnd.amazon.ebook"},
+    /* Any kind of binary data      */ {".bin", "application/octet-stream"},
+    /* Windows OS/2 Bitmap Graphics */ {".bmp", "image/bmp"},
+    /* BZip archive                 */ {".bz" , "application/x-bzip"},
+    /* BZip2 archive                */ {".bz2", "application/x-bzip"},
+    /* CD audio                     */ {".cda", "application/x-cdf"},
+    /* C-Shell script               */ {".csh", "application/x-csh"},
+    /* CSS stylesheet               */ {".css", "text/css"},
+    /* Comma seperated data         */ {".csv", "text/csv"},
+    /* Microsoft Word               */ {".doc", "application/msword"},
+    /* Microsoft Word (OpenXML)     */ {".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+    /* MS Embedded OpenType fonts   */ {".eot", "application/vnd.ms-fontobject"},
+    /* Electronic publication       */ {".epub", "application/epub+zip"},
+    /* GZip Compressed Archive      */ {".gz" , "application/gzip"},
+    /* It's pronounced 'gif'        */ {".gif", "image/gif"},
+    /* Hypertext Markup Language    */ {".html", "text/html"},
+    /* Icon format                  */ {".ico", "image/vnd.microsoft.icon"},
+    /* iCalendar format             */ {".ics", "text/calendar"},
+    /* Java Archive                 */ {".jar", "application/java-archive"},
+    /* JPEG images                  */ {".jpg", "image/jpeg"},
+    /* JPEG images                  */ {".jpeg", "image/jpeg"},
+    /* JavaScript                   */ {".js" , "text/javascript"},
+    /* JSON format                  */ {".json", "application/json"},
+    /* JSON-LD format               */ {".jsonld", "application/ld+json"},
+    /* Musical Instrument Digital Interface */ {".mid", "audio/midi"},  // audio/x-midi is also listed for this file type. *shrugs*
+    /* Musical Instrument Digital Interface */ {".midi", "audio/midi"},
+    /* JavaScript module            */ {".mjs", "text/javascript"},
+    /* MP3 audio                    */ {".mp3", "audio/mpeg"},
+    /* MP4 audio                    */ {".mp4", "video/mp4"},
+    /* MPEG Video                   */ {".mpeg", "video/mpeg"},
+    /* Apple Installer Package      */ {".mpkg", "application/vnd.apple.installer+xml"},
+    /* OpenDocument presentation document */ {".odp", "application/vnd.oasis.opendocument.presentation"},
+    /* OpenDocument spreadsheet document  */ {".ods", "application/vnd.oasis.opendocument.spreadsheet"},
+    /* OpenDocument text document   */ {".odt", "application/vnd.oasis.opendocument.text"},
+    /* OGG audio                    */ {".oga", "audio/ogg"},
+    /* OGG audio                    */ {".ogg", "audio/ogg"},
+    /* OGG video                    */ {".ogv", "video/ogg"},
+    /* OGG                          */ {".ogx", "application/ogg"},
+    /* Opus audio                   */ {".opus", "audio/opus"},
+    /* OpenType font                */ {".otf", "font/otf"},
+    /* Portable Network Graphics    */ {".png", "image/png"},
+    /* Adobe Portable Document      */ {".pdf", "application/pdf"},
+    /* Hypertext Preprocessor       */ {".php", "application/x-httpd-php"},
+    /* Microsoft PowerPoint         */ {".ppt", "application/vnd.ms-powerpoint"},
+    /* Microsoft PowerPoint (OpenXML) */ {".pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation"},
+    /* RAR archive                  */ {".rar", "application/vnd.rar"},
+    /* Rich Text Format             */ {".rtf", "application/rtf"},
+    /* Bourne shell script          */ {".sh" , "application/x-sh"},
+    /* Scalable Vector Graphics     */ {".svg", "image/svg+xml"},
+    /* Adobe Flash                  */ {".swf", "application/x-shockwave-flash"},
+    /* Tape Archive                 */ {".tar", "application/x-tar"},
+    /* Tagged Image File Format     */ {".tif", "image/tiff"},
+    /* Tagged Image File Format     */ {".tiff", "image/tiff"},
+    /* TrueType Font                */ {".ttf", "font/ttf"},
+    /* Text, (generally ASCII)      */ {".txt", "text/plain"},
+    /* Microsoft Visio              */ {".vsd", "application/vnd.visio"},
+    /* Waveform Audio Format        */ {".wav", "audio/wav"},
+    /* WEBM audio                   */ {".weba", "audio/webm"},
+    /* WEBM video                   */ {".webm", "video/webm"},
+    /* WEBP image                   */ {".webp", "image/webp"},
+    /* Web Open Font Format         */ {".woff", "font/woff"},
+    /* Web Open Font Format         */ {".woff2", "font/woff2"},
+    /* XHTML                        */ {".xhtml", "application/xhtml+xml"},
+    /* Microsoft Excel              */ {".xls", "application/vnd.ms-excel"},
+    /* Microsoft Excel (OpenXML)    */ {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+    /* XML                          */ {".xml", "application/xml"}, // If this doesn't work, try text/xml
+    /* XUL                          */ {".xul", "application/vnd.mozilla.xul+xml"},
+    /* Zip Archive                  */ {".zip", "application/zip"},
+    /* 3GPP audio/video container   */ {".3pg", "video/3gpp"}, // audio/3gpp if it doesn't contain video
+    /* 3GPP2 audio/video container  */ {".3g2", "video/3gpp2"}, // audio/3gpp2 if it doesn't contain video
+    /* 7-zip archive                */ {".7z", "application/x-7z-compressed"}
+};
 
 std::map<kleins::httpMethod, std::string> kleins::httpServer::methodLookup = {
     {kleins::httpMethod::GET, "GET"},         {kleins::httpMethod::HEAD, "HEAD"},     {kleins::httpMethod::POST, "POST"},

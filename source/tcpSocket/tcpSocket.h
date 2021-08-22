@@ -22,7 +22,7 @@ private:
   bool tick();
 
 public:
-  tcpSocket(const char *listenAddress, const int listenPort);
+  tcpSocket(const char* listenAddress, const int listenPort);
   ~tcpSocket();
 
   std::future<bool> init();

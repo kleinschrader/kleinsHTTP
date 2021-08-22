@@ -22,7 +22,7 @@ public:
 
   virtual bool getAlive();
   virtual void tick();
-  virtual void sendData(const char *data, int datalength);
+  virtual void sendData(const char* data, int datalength);
   virtual void close_socket();
 };
 }; // namespace kleins

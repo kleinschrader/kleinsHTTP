@@ -8,11 +8,9 @@ kleins::connectionBase::~connectionBase() {
   }
 }
 
-void kleins::connectionBase::startOwnTickLoop() {
-  tickThread = new std::thread(ownTickLoop, this);
-}
+void kleins::connectionBase::startOwnTickLoop() { tickThread = new std::thread(ownTickLoop, this); }
 
-void kleins::connectionBase::ownTickLoop(connectionBase *connection) {
+void kleins::connectionBase::ownTickLoop(connectionBase* connection) {
   while (connection->getAlive()) {
     connection->tick();
     usleep(2000);

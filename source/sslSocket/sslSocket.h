@@ -21,13 +21,12 @@ private:
   struct sockaddr_in address;
   int addrlen;
 
-  SSL_CTX *ctx;
+  SSL_CTX* ctx;
 
   bool tick();
 
 public:
-  sslSocket(const char *listenAddress, const int listenPort,
-            const char *pathToCertificate, const char *pathToKey);
+  sslSocket(const char* listenAddress, const int listenPort, const char* pathToCertificate, const char* pathToKey);
   ~sslSocket();
 
   std::future<bool> init();

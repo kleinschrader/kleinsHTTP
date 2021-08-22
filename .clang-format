@@ -2,7 +2,7 @@
 Language:        Cpp
 # BasedOnStyle:  LLVM
 AccessModifierOffset: -2
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: AlwaysBreak
 AlignConsecutiveMacros: None
 AlignConsecutiveAssignments: None
 AlignConsecutiveBitFields: None
@@ -57,7 +57,7 @@ BreakConstructorInitializersBeforeComma: false
 BreakConstructorInitializers: BeforeColon
 BreakAfterJavaFieldAnnotations: false
 BreakStringLiterals: true
-ColumnLimit:     80
+ColumnLimit:     160
 CommentPragmas:  '^ IWYU pragma:'
 CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
@@ -122,8 +122,8 @@ PenaltyBreakTemplateDeclaration: 10
 PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 60
 PenaltyIndentedWhitespace: 0
-PointerAlignment: Right
-ReflowComments:  true
+PointerAlignment: Left
+ReflowComments:  false
 SortIncludes:    true
 SortJavaStaticImport: Before
 SortUsingDeclarations: true

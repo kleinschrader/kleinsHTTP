@@ -13,8 +13,8 @@
 namespace kleins {
 class connectionBase {
 private:
-  static void ownTickLoop(connectionBase *conn);
-  std::thread *tickThread = 0;
+  static void ownTickLoop(connectionBase* conn);
+  std::thread* tickThread = 0;
 
 public:
   connectionBase();
@@ -26,7 +26,7 @@ public:
 
   virtual void tick() = 0;
 
-  virtual void sendData(const char *data, int datalength) = 0;
+  virtual void sendData(const char* data, int datalength) = 0;
 
   virtual void close_socket() = 0;
 

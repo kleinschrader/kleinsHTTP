@@ -14,8 +14,8 @@ namespace kleins {
 
 class socketBase {
 protected:
-  static void tickLoop(socketBase *socket);
-  std::thread *tickThread;
+  static void tickLoop(socketBase* socket);
+  std::thread* tickThread;
 
   virtual bool tick() = 0;
 
@@ -25,7 +25,7 @@ public:
 
   void startTicks();
 
-  std::function<void(connectionBase *)> newConnectionCallback;
+  std::function<void(connectionBase*)> newConnectionCallback;
   virtual std::future<bool> init() = 0;
 };
 

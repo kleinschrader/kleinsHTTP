@@ -1,6 +1,6 @@
 #include "httpParser.h"
 
-kleins::httpParser::httpParser(packet *httpdata, connectionBase *conn) {
+kleins::httpParser::httpParser(packet* httpdata, connectionBase* conn) {
   data = httpdata;
   connsocket = conn;
 }
@@ -69,18 +69,17 @@ bool kleins::httpParser::parse() {
   if (search != functionTable.end()) {
     search->second(this);
   } else {
-    connsocket->sendData("HTTP/1.0 404\r\ncontent-type:text/html; "
-                         "charset=UTF-8\r\n\r\n<html><head></head><body>Not "
-                         "found</body></html>\r\n",
-                         104);
+    connsocket->sendData(
+        "HTTP/1.0 404\r\ncontent-type:text/html; "
+        "charset=UTF-8\r\n\r\n<html><head></head><body>Not "
+        "found</body></html>\r\n",
+        104);
   }
 
   return true;
 }
 
-void kleins::httpParser::on(
-    const std::string &inmethod, const std::string &inuri,
-    const std::function<void(kleins::httpParser *)> callback) {
+void kleins::httpParser::on(const std::string& inmethod, const std::string& inuri, const std::function<void(kleins::httpParser*)> callback) {
   std::string ref;
   ref.reserve(inmethod.length() + inuri.length() + 1);
 
@@ -90,16 +89,12 @@ void kleins::httpParser::on(
   functionTable.insert(std::make_pair(ref, callback));
 }
 
-void kleins::httpParser::on(
-    const std::string &ref,
-    const std::function<void(kleins::httpParser *)> callback) {
+void kleins::httpParser::on(const std::string& ref, const std::function<void(kleins::httpParser*)> callback) {
   functionTable.insert(std::make_pair(ref, callback));
 }
 
-void kleins::httpParser::respond(const std::string &status,
-                                 const std::list<std::string> &responseHeaders,
-                                 const std::string &body,
-                                 const std::string &mimeType) {
+void kleins::httpParser::respond(
+    const std::string& status, const std::list<std::string>& responseHeaders, const std::string& body, const std::string& mimeType) {
   std::stringstream response;
 
   response << "HTTP/1.1 " << status << "\r\n";
@@ -126,11 +121,11 @@ void kleins::httpParser::respond(const std::string &status,
 void kleins::httpParser::parseRequestline() {
   const int length = requestline.length();
 
-  char *bufferData = new char[(length + 1) * 3];
+  char* bufferData = new char[(length + 1) * 3];
 
-  char *methodBuffer = bufferData;
-  char *pathBuffer = bufferData + ((length + 1) * 1);
-  char *variableBuffer = bufferData + ((length + 1) * 2);
+  char* methodBuffer = bufferData;
+  char* pathBuffer = bufferData + ((length + 1) * 1);
+  char* variableBuffer = bufferData + ((length + 1) * 2);
 
   memset(bufferData, 0, (length + 1) * 3);
 
@@ -144,9 +139,7 @@ void kleins::httpParser::parseRequestline() {
   int requestlineState = REUQESTLINE_STATE_METHOD;
   int offsetCounter = 0;
   for (auto x : requestline) {
-    auto storeInBuffer = [x, &offsetCounter](char *b) {
-      b[offsetCounter++] = x;
-    };
+    auto storeInBuffer = [x, &offsetCounter](char* b) { b[offsetCounter++] = x; };
 
     switch (requestlineState) {
 
@@ -195,17 +188,14 @@ void kleins::httpParser::parseRequestline() {
   delete[] bufferData;
 }
 
-void kleins::httpParser::parseURLencodedData(const char *rawData) {
+void kleins::httpParser::parseURLencodedData(const char* rawData) {
   const int length = strlen(rawData);
   parseURLencodedData(rawData, length);
 }
 
-void kleins::httpParser::parseURLencodedData(std::string &rawData) {
-  parseURLencodedData(rawData.c_str(), rawData.length());
-}
+void kleins::httpParser::parseURLencodedData(std::string& rawData) { parseURLencodedData(rawData.c_str(), rawData.length()); }
 
-void kleins::httpParser::parseURLencodedData(const char *rawData,
-                                             const int length) {
+void kleins::httpParser::parseURLencodedData(const char* rawData, const int length) {
   enum parseState {
     PARSE_STATE_KEY,
     PARSE_STATE_VALUE,
@@ -214,11 +204,11 @@ void kleins::httpParser::parseURLencodedData(const char *rawData,
   int offsetCounter = 0;
   uint8_t currentState = PARSE_STATE_KEY;
 
-  char *buffer = new char[(length + 1) * 2];
+  char* buffer = new char[(length + 1) * 2];
   memset(buffer, 0, (length + 1) * 2);
 
-  char *keyBuffer = buffer;
-  char *valueBuffer = buffer + length + 1;
+  char* keyBuffer = buffer;
+  char* valueBuffer = buffer + length + 1;
 
   for (int i = 0; i < length; i++) {
     switch (currentState) {
@@ -240,8 +230,7 @@ void kleins::httpParser::parseURLencodedData(const char *rawData,
         offsetCounter = 0;
         currentState = PARSE_STATE_KEY;
 
-        parameters.insert(
-            std::make_pair(std::string(keyBuffer), std::string(valueBuffer)));
+        parameters.insert(std::make_pair(std::string(keyBuffer), std::string(valueBuffer)));
 
         memset(buffer, 0, (length + 1) * 2);
       }
@@ -254,8 +243,7 @@ void kleins::httpParser::parseURLencodedData(const char *rawData,
   }
 
   if (currentState == PARSE_STATE_VALUE) {
-    parameters.insert(
-        std::make_pair(std::string(keyBuffer), std::string(valueBuffer)));
+    parameters.insert(std::make_pair(std::string(keyBuffer), std::string(valueBuffer)));
   }
 
   delete[] buffer;
@@ -272,11 +260,11 @@ void kleins::httpParser::parseHeaders() {
   int offsetCounter = 0;
   uint8_t currentState = PARSE_STATE_KEY;
 
-  char *buffer = new char[(length + 1) * 2];
+  char* buffer = new char[(length + 1) * 2];
   memset(buffer, 0, (length + 1) * 2);
 
-  char *keyBuffer = buffer;
-  char *valueBuffer = buffer + length + 1;
+  char* keyBuffer = buffer;
+  char* valueBuffer = buffer + length + 1;
 
   bool skipNext = false;
   for (auto x : header) {
@@ -307,8 +295,7 @@ void kleins::httpParser::parseHeaders() {
         offsetCounter = 0;
         currentState = PARSE_STATE_KEY;
 
-        headers.insert(
-            std::make_pair(std::string(keyBuffer), std::string(valueBuffer)));
+        headers.insert(std::make_pair(std::string(keyBuffer), std::string(valueBuffer)));
 
         memset(buffer, 0, (length + 1) * 2);
       }

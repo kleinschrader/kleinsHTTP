@@ -14,7 +14,7 @@ std::map<std::string, std::string> kleins::httpServer::mimeLookup = {
     /* Amazon Kindle eBook format   */ {".azw", "application/vnd.amazon.ebook"},
     /* Any kind of binary data      */ {".bin", "application/octet-stream"},
     /* Windows OS/2 Bitmap Graphics */ {".bmp", "image/bmp"},
-    /* BZip archive                 */ {".bz" , "application/x-bzip"},
+    /* BZip archive                 */ {".bz", "application/x-bzip"},
     /* BZip2 archive                */ {".bz2", "application/x-bzip"},
     /* CD audio                     */ {".cda", "application/x-cdf"},
     /* C-Shell script               */ {".csh", "application/x-csh"},
@@ -24,7 +24,7 @@ std::map<std::string, std::string> kleins::httpServer::mimeLookup = {
     /* Microsoft Word (OpenXML)     */ {".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
     /* MS Embedded OpenType fonts   */ {".eot", "application/vnd.ms-fontobject"},
     /* Electronic publication       */ {".epub", "application/epub+zip"},
-    /* GZip Compressed Archive      */ {".gz" , "application/gzip"},
+    /* GZip Compressed Archive      */ {".gz", "application/gzip"},
     /* It's pronounced 'gif'        */ {".gif", "image/gif"},
     /* Hypertext Markup Language    */ {".html", "text/html"},
     /* Icon format                  */ {".ico", "image/vnd.microsoft.icon"},
@@ -32,10 +32,10 @@ std::map<std::string, std::string> kleins::httpServer::mimeLookup = {
     /* Java Archive                 */ {".jar", "application/java-archive"},
     /* JPEG images                  */ {".jpg", "image/jpeg"},
     /* JPEG images                  */ {".jpeg", "image/jpeg"},
-    /* JavaScript                   */ {".js" , "text/javascript"},
+    /* JavaScript                   */ {".js", "text/javascript"},
     /* JSON format                  */ {".json", "application/json"},
     /* JSON-LD format               */ {".jsonld", "application/ld+json"},
-    /* Musical Instrument Digital Interface */ {".mid", "audio/midi"},  // audio/x-midi is also listed for this file type. *shrugs*
+    /* Musical Instrument Digital Interface */ {".mid", "audio/midi"}, // audio/x-midi is also listed for this file type. *shrugs*
     /* Musical Instrument Digital Interface */ {".midi", "audio/midi"},
     /* JavaScript module            */ {".mjs", "text/javascript"},
     /* MP3 audio                    */ {".mp3", "audio/mpeg"},
@@ -58,7 +58,7 @@ std::map<std::string, std::string> kleins::httpServer::mimeLookup = {
     /* Microsoft PowerPoint (OpenXML) */ {".pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation"},
     /* RAR archive                  */ {".rar", "application/vnd.rar"},
     /* Rich Text Format             */ {".rtf", "application/rtf"},
-    /* Bourne shell script          */ {".sh" , "application/x-sh"},
+    /* Bourne shell script          */ {".sh", "application/x-sh"},
     /* Scalable Vector Graphics     */ {".svg", "image/svg+xml"},
     /* Adobe Flash                  */ {".swf", "application/x-shockwave-flash"},
     /* Tape Archive                 */ {".tar", "application/x-tar"},
@@ -79,10 +79,9 @@ std::map<std::string, std::string> kleins::httpServer::mimeLookup = {
     /* XML                          */ {".xml", "application/xml"}, // If this doesn't work, try text/xml
     /* XUL                          */ {".xul", "application/vnd.mozilla.xul+xml"},
     /* Zip Archive                  */ {".zip", "application/zip"},
-    /* 3GPP audio/video container   */ {".3pg", "video/3gpp"}, // audio/3gpp if it doesn't contain video
+    /* 3GPP audio/video container   */ {".3pg", "video/3gpp"},  // audio/3gpp if it doesn't contain video
     /* 3GPP2 audio/video container  */ {".3g2", "video/3gpp2"}, // audio/3gpp2 if it doesn't contain video
-    /* 7-zip archive                */ {".7z", "application/x-7z-compressed"}
-};
+    /* 7-zip archive                */ {".7z", "application/x-7z-compressed"}};
 
 std::map<kleins::httpMethod, std::string> kleins::httpServer::methodLookup = {
     {kleins::httpMethod::GET, "GET"},         {kleins::httpMethod::HEAD, "HEAD"},     {kleins::httpMethod::POST, "POST"},

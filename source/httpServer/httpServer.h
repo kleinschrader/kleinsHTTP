@@ -12,6 +12,8 @@
 
 namespace kleins {
 
+typedef enum httpMethod { GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH } httpMethod;
+
 /**
  * @brief An httpserver that will take care of connection managment, serving of static files and api endpoints
  * 
@@ -28,6 +30,7 @@ private:
   void newConnection(connectionBase* conn);
 
   static std::map<std::string, std::string> mimeLookup;
+  static std::map<httpMethod, std::string> methodLookup;
 
 public:
   /**
@@ -58,6 +61,23 @@ public:
    * \endcode
    */
   void on(const std::string& method, const std::string& uri, const std::function<void(httpParser*)> callback);
+
+  /**
+   * @brief Add an endpoint to the httpServer
+   * 
+   * @param method The method of the endpoint
+   * @param uri The url to respond to on ('/', 'api/hello') 
+   * @param callback The callback function that gets triggered when a client acces it.
+   * 
+   * Example:
+   * 
+   * \code{.cpp}
+   * server.on(kleins::httpMethod::GET,"/hello",[](httpParser* parser){
+   *    data->respond("200",{},"Hello!");
+   * });
+   * \endcode
+   */
+  void on(httpMethod method, const std::string& uri, const std::function<void(httpParser*)> callback);
 
   /**
    * @brief Serve a localfile under a path

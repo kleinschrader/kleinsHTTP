@@ -1,43 +1,91 @@
 #ifndef HTTPSERVER_H
 #define HTTPSERVER_H
 
-#include <list>
 #include <filesystem>
 #include <fstream>
+#include <list>
 
-#include "../socketBase/socketBase.h"
 #include "../connectionBase/connectionBase.h"
-#include "../packet/packet.h"
 #include "../httpParser/httpParser.h"
+#include "../packet/packet.h"
+#include "../socketBase/socketBase.h"
 
-namespace kleins
-{
-    class httpServer
-    {
-    private:
-        std::list<std::unique_ptr<socketBase>> sockets;
+namespace kleins {
 
-        std::map<std::string,const std::function<void(httpParser*)>> functionTable;
-        std::map<std::string,std::string> fileLookup;
+/**
+ * @brief An httpserver that will take care of connection managment, serving of static files and api endpoints
+ * 
+ * 
+ * 
+ */
+class httpServer {
+private:
+  std::list<std::unique_ptr<socketBase>> sockets;
 
-        void newConnection(connectionBase* conn);
+  std::map<std::string, const std::function<void(httpParser*)>> functionTable;
+  std::map<std::string, std::string> fileLookup;
 
+  void newConnection(connectionBase* conn);
 
-        static std::map<std::string,std::string> mimeLookup;
+  static std::map<std::string, std::string> mimeLookup;
 
-    public:
-        httpServer(/* args */);
-        ~httpServer();
+public:
+  /**
+   * @brief httpServer constructor
+   * 
+   */
+  httpServer(/* args */);
 
-        void on(const std::string& method,const std::string& uri, const std::function<void(httpParser*)> callback);
+  /**
+   * @brief Destroy the http Server object
+   * 
+   */
+  ~httpServer();
 
-        void serve(const std::string& uri, const std::string& path);
+  /**
+   * @brief Add an endpoint to the httpServer
+   * 
+   * @param method The method of the endpoint ('GET','POST','DELETE', etc...)
+   * @param uri The url to respond to on ('/', 'api/hello') 
+   * @param callback The callback function that gets triggered when a client acces it.
+   * 
+   * Example:
+   * 
+   * \code{.cpp}
+   * server.on("GET","/hello",[](httpParser* parser){
+   *    data->respond("200",{},"Hello!");
+   * });
+   * \endcode
+   */
+  void on(const std::string& method, const std::string& uri, const std::function<void(httpParser*)> callback);
 
-        void serveDirectory(const std::string& baseuri, const std::string& path, const std::string indexFile = "index.html");
+  /**
+   * @brief Serve a localfile under a path
+   * 
+   * @param uri The url the file should be provided under
+   * @param path The local path of the file
+   */
+  void serve(const std::string& uri, const std::string& path);
 
-        bool addSocket(socketBase* socket);
-    };
+  /**
+   * @brief Automaticly serve a directory recursivly
+   * 
+   * @param baseuri The parent path of all the files ('/','static/')
+   * @param path The path of the local files to be served
+   * @param indexFile Set the name of the index files that will also be avaliable under /
+   */
+  void serveDirectory(const std::string& baseuri, const std::string& path, const std::string indexFile = "index.html");
 
-}
+  /**
+   * @brief Add a socket to listen on
+   * 
+   * @param socket A pointer to a socket that should be used. \n It should be noted that it the socket will be delted when the server object gets deleted.
+   * @return true 
+   * @return false 
+   */
+  bool addSocket(socketBase* socket);
+};
+
+} // namespace kleins
 
 #endif

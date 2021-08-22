@@ -5,3 +5,4 @@ example.o
 example.key
 example.crt
 .vscode
+docs/

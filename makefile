@@ -8,6 +8,16 @@ LISTOFHEADERFILES= \
 	source/httpServer/httpServer.h \
 	source/sslSocket/sslSocket.h \
 	source/sslConnection/sslConnection.h
+LISTOFSOURCEFILES= \
+	source/connectionBase/connectionBase.cpp \
+	source/httpParser/httpParser.cpp \
+	source/httpServer/httpServer.cpp \
+	source/packet/packet.cpp \
+	source/socketBase/socketBase.cpp \
+	source/sslConnection/sslConnection.cpp \
+	source/sslSocket/sslSocket.cpp \
+	source/tcpConnection/tcpConnection.cpp \
+	source/tcpSocket/tcpSocket.cpp
 
 TGT=target/release
 TGTDBG=target/debug
@@ -35,6 +45,9 @@ example-cert:
 
 gdb: example
 	gdb example.o
+
+format:
+	clang-format -i $(LISTOFHEADERFILES) $(LISTOFSOURCEFILES)
 
 $(TGTDBG)/libkleinsHTTP.so: $(TGTDBG)/connectionBase.o $(TGTDBG)/tcpConnection.o $(TGTDBG)/httpParser.o $(TGTDBG)/packet.o $(TGTDBG)/socketBase.o $(TGTDBG)/tcpSocket.o $(TGTDBG)/httpServer.o $(TGTDBG)/sslSocket.o $(TGTDBG)/sslConnection.o
 	g++ -std=c++17 $(LIBS) -shared -ggdb -o $@ $^

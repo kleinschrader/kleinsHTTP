@@ -4,12 +4,11 @@
 #include <string>
 
 namespace kleins {
-    struct packet
-    {
-    public:
-        std::string data;
-        int size;
-    };
-}
+struct packet {
+public:
+  std::string data;
+  int size;
+};
+} // namespace kleins
 
 #endif

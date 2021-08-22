@@ -3,6 +3,12 @@
 std::map<std::string, std::string> kleins::httpServer::mimeLookup = {
     {".html", "text/html"}, {".css", "text/css"}, {".js", "text/javascript"}, {".svg", "image/svg+xml"}};
 
+std::map<kleins::httpMethod, std::string> kleins::httpServer::methodLookup = {
+    {kleins::httpMethod::GET, "GET"},         {kleins::httpMethod::HEAD, "HEAD"},     {kleins::httpMethod::POST, "POST"},
+    {kleins::httpMethod::PUT, "PUT"},         {kleins::httpMethod::DELETE, "DELETE"}, {kleins::httpMethod::CONNECT, "CONNECT"},
+    {kleins::httpMethod::OPTIONS, "OPTIONS"}, {kleins::httpMethod::TRACE, "TRACE"},   {kleins::httpMethod::PATCH, "PATCH"},
+};
+
 kleins::httpServer::httpServer(/* args */) {}
 
 kleins::httpServer::~httpServer() { sockets.clear(); }
@@ -55,6 +61,16 @@ void kleins::httpServer::on(const std::string& method, const std::string& uri, c
   ref.reserve(method.length() + uri.length() + 1);
 
   ref = method;
+  ref.append(uri);
+
+  functionTable.insert(std::make_pair(ref, callback));
+}
+
+void kleins::httpServer::on(httpMethod method, const std::string& uri, const std::function<void(httpParser*)> callback) {
+  std::string ref;
+  ref.reserve(methodLookup[method].length() + uri.length() + 1);
+
+  ref = methodLookup[method];
   ref.append(uri);
 
   functionTable.insert(std::make_pair(ref, callback));

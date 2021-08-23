@@ -214,3 +214,7 @@ void kleins::httpServer::serveDirectory(const std::string& baseuri, const std::s
     }
   }
 }
+
+void kleins::httpServer::printVersion() {
+  std::cout << "kleinsHTTP Build: " << BUILD_VERSION << std::endl; 
+}

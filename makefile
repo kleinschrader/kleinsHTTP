@@ -24,10 +24,10 @@ TGTDBG=target/debug
 
 LIBS= -lssl -lcrypto -lpthread
 
-BUILDPARAMS=g++ -std=c++17 $^ -O2 -o $@ -c -fPIC 
-BUILDPARAMS_DBG=g++ -std=c++17 $^ -ggdb -o $@ -c -fPIC
+VERSION=0.1.2
 
-VERSION=0.1.1
+BUILDPARAMS=g++ -std=c++17 -D BUILD_VERSION=\"$(VERSION)-release\" $^ -O2 -o $@ -c -fPIC 
+BUILDPARAMS_DBG=g++ -std=c++17 -D BUILD_VERSION=\"$(VERSION)-debug\" $^ -ggdb -o $@ -c -fPIC
 
 debug: $(TGTDBG)/libkleinsHTTP.so $(TGTDBG)/kleinsHTTP.h $(TGTDBG)/kleinsHTTP.a
 	

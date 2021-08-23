@@ -10,6 +10,10 @@
 #include "../packet/packet.h"
 #include "../socketBase/socketBase.h"
 
+#ifndef BUILD_VERSION
+#define BUILD_VERSION "UNKNOWN"
+#endif
+
 namespace kleins {
 
 typedef enum httpMethod { GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH } httpMethod;
@@ -104,6 +108,12 @@ public:
    * @return false 
    */
   bool addSocket(socketBase* socket);
+
+  /**
+   * @brief Print the version of kleinsHTTP to the stdout
+   * 
+   */
+  void printVersion();
 };
 
 } // namespace kleins

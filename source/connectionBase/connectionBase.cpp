@@ -24,3 +24,14 @@ void kleins::connectionBase::join() {
     }
   }
 }
+
+void kleins::connectionBase::setTimeout(unsigned int timeoutin) { timeout = timeoutin; }
+
+void kleins::connectionBase::resetTimeoutTimer() { lastPacket = std::chrono::steady_clock::now(); }
+
+bool kleins::connectionBase::getTimeout() {
+  if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lastPacket).count() > timeout) {
+    return true;
+  }
+  return false;
+}

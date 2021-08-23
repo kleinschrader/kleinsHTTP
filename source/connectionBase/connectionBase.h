@@ -1,6 +1,7 @@
 #ifndef CONNECTIONBASE_H
 #define CONNECTIONBASE_H
 
+#include <chrono>
 #include <future>
 #include <iostream>
 #include <list>
@@ -15,6 +16,9 @@ class connectionBase {
 private:
   static void ownTickLoop(connectionBase* conn);
   std::thread* tickThread = 0;
+  unsigned int timeout = 30000;
+
+  std::chrono::time_point<std::chrono::steady_clock> lastPacket;
 
 public:
   connectionBase();
@@ -31,6 +35,11 @@ public:
   virtual void close_socket() = 0;
 
   void join();
+
+  void setTimeout(unsigned int timeoutInMS = 30000);
+
+  void resetTimeoutTimer();
+  bool getTimeout();
 
   std::function<void(std::unique_ptr<packet>)> onRecieveCallback;
 };

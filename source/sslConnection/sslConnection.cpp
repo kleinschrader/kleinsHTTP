@@ -9,6 +9,7 @@ kleins::sslConnection::sslConnection(int connectionid, SSL_CTX* sslcontext) {
     ERR_print_errors_fp(stderr);
     initOk = false;
   }
+  resetTimeoutTimer();
 }
 
 kleins::sslConnection::~sslConnection() {
@@ -37,8 +38,15 @@ void kleins::sslConnection::tick() {
   if (!packetBuffer->size) {
     usleep(20000);
     delete packetBuffer;
+
+    if (getTimeout()) {
+      close_socket();
+    }
+
     return;
   }
+
+  resetTimeoutTimer();
 
   packetBuffer->data.resize(packetBuffer->size);
 

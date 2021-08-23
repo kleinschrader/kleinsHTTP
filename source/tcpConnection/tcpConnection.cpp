@@ -1,6 +1,9 @@
 #include "tcpConnection.h"
 
-kleins::tcpConnection::tcpConnection(int connectionid) { connectionfd = connectionid; }
+kleins::tcpConnection::tcpConnection(int connectionid) {
+  connectionfd = connectionid;
+  resetTimeoutTimer();
+}
 
 kleins::tcpConnection::~tcpConnection() {
   close_socket();
@@ -24,8 +27,15 @@ void kleins::tcpConnection::tick() {
   if (packetBuffer->size == -1) {
     delete packetBuffer;
     usleep(20000);
+
+    if (getTimeout()) {
+      close_socket();
+    }
+
     return;
   }
+
+  resetTimeoutTimer();
 
   packetBuffer->data.resize(packetBuffer->size);
 

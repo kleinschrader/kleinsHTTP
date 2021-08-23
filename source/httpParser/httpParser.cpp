@@ -104,6 +104,10 @@ void kleins::httpParser::respond(
     response << *it << "\r\n";
   }
 
+  if (headers["Connection"] == "keep-alive") {
+    response << "Keep-Alive: timeout=30\r\n";
+  }
+
   response << "content-length: " << body.size() + 2 << "\r\n";
   response << "Content-Type: " << mimeType << "; charset=utf-8"
            << "\r\n";

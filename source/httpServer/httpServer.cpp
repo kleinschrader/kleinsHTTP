@@ -123,7 +123,9 @@ void kleins::httpServer::newConnection(kleins::connectionBase* conn) {
 
     parser.get()->parse();
 
-    conn->close_socket();
+    if (parser->headers["Connection"] != "keep-alive") {
+      conn->close_socket();
+    }
   };
 
   if (conn->onRecieveCallback) {

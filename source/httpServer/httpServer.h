@@ -4,10 +4,12 @@
 #include <filesystem>
 #include <fstream>
 #include <list>
+#include <openssl/rand.h>
 
 #include "../connectionBase/connectionBase.h"
 #include "../httpParser/httpParser.h"
 #include "../packet/packet.h"
+#include "../sessionBase/sessionBase.h"
 #include "../socketBase/socketBase.h"
 
 #ifndef BUILD_VERSION
@@ -15,6 +17,7 @@
 #endif
 
 namespace kleins {
+class httpParser;
 
 typedef enum httpMethod { GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH } httpMethod;
 
@@ -26,6 +29,13 @@ typedef enum httpMethod { GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE,
  */
 class httpServer {
 private:
+  std::map<std::string, sessionBase*> sessions;
+
+  std::thread* sessionCleanupThread;
+  static void cleanUpSessionLoop(httpServer* server);
+
+  bool keepRunning = true;
+
   std::list<std::unique_ptr<socketBase>> sockets;
 
   std::map<std::string, const std::function<void(httpParser*)>> functionTable;
@@ -114,6 +124,8 @@ public:
    * 
    */
   void printVersion();
+
+  template <class T> sessionBase* startSession(std::string& authKey);
 };
 
 } // namespace kleins

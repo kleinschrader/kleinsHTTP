@@ -1,6 +1,11 @@
 #include <iostream>
 #include "target/debug/kleinsHTTP.h"
 
+class nameSession : public kleins::sessionBase{
+public:
+    std::string name = "";
+};
+
 int main()
 {
     std::cout << "Hello world!" << std::endl;
@@ -17,9 +22,17 @@ int main()
     });
 
     server.on(kleins::httpMethod::GET,"/hello",[](kleins::httpParser* data){
-        std::stringstream response;
-        response << "Hello " << data->parameters["name"] << "! ";
+        nameSession* session = (nameSession*)data->startSession<nameSession>();
 
+        std::stringstream response;
+        if(session->name == ""){
+            response << "Hello " << data->parameters["name"] << "! ";
+            session->name = data->parameters["name"];
+        }
+        else
+        {
+            response << "Hey... I remember you! Your name is  " << session->name << "! ";
+        }
         response << "This is " << data->headers["Host"];
         
         data->respond("200",{},response.str());

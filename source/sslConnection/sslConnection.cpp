@@ -53,7 +53,9 @@ void kleins::sslConnection::tick() {
   this->onRecieveCallback(std::unique_ptr<packet>(packetBuffer));
 }
 
-void kleins::sslConnection::sendData(const char* data, int datalength) { SSL_write(ossl, data, datalength); }
+void kleins::sslConnection::sendData(const char* data, int datalength) {
+  SSL_write(ossl, data, datalength);
+}
 
 void kleins::sslConnection::close_socket() {
   SSL_shutdown(ossl);

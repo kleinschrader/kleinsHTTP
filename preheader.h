@@ -4,5 +4,6 @@ namespace kleins {
     class tcpConnection;
     class httpParser;
     class socketBase;
+    class sessionBase;
 }
 

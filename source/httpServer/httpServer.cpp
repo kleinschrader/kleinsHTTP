@@ -90,9 +90,15 @@ std::map<kleins::httpMethod, std::string> kleins::httpServer::methodLookup = {
 };
 
 kleins::httpServer::httpServer(/* args */) {
+  sessionCleanupThread = new std::thread(cleanUpSessionLoop, this);
 }
 
 kleins::httpServer::~httpServer() {
+  keepRunning = false;
+
+  sessionCleanupThread->join();
+  delete sessionCleanupThread;
+
   sockets.clear();
 }
 
@@ -118,7 +124,7 @@ bool kleins::httpServer::addSocket(socketBase* socket) {
 void kleins::httpServer::newConnection(kleins::connectionBase* conn) {
 
   conn->onRecieveCallback = [this, conn](std::unique_ptr<kleins::packet> packet) {
-    auto parser = std::unique_ptr<kleins::httpParser>(new kleins::httpParser(packet.get(), conn));
+    auto parser = std::unique_ptr<kleins::httpParser>(new kleins::httpParser(packet.get(), conn, this));
 
     for (auto cb : this->functionTable) {
       parser->on(cb.first, cb.second);
@@ -220,4 +226,27 @@ void kleins::httpServer::serveDirectory(const std::string& baseuri, const std::s
 
 void kleins::httpServer::printVersion() {
   std::cout << "kleinsHTTP Build: " << BUILD_VERSION << std::endl;
+}
+
+void kleins::httpServer::cleanUpSessionLoop(httpServer* server) {
+  while (server->keepRunning) {
+
+    std::map<std::string, sessionBase*>::iterator it = server->sessions.begin();
+
+    auto currentTime = std::chrono::system_clock::now();
+
+    while (it != server->sessions.end()) {
+      sessionBase* sb = it->second;
+
+      if (sb->expireTime < currentTime) {
+        server->sessions.erase(it);
+
+        delete sb;
+      }
+
+      it++;
+    }
+
+    usleep(5000000);
+  }
 }

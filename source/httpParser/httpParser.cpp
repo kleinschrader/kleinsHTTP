@@ -1,8 +1,9 @@
 #include "httpParser.h"
 
-kleins::httpParser::httpParser(packet* httpdata, connectionBase* conn) {
+kleins::httpParser::httpParser(packet* httpdata, connectionBase* conn, httpServer* srv) {
   data = httpdata;
   connsocket = conn;
+  server = srv;
 }
 
 kleins::httpParser::~httpParser() {
@@ -109,13 +110,15 @@ void kleins::httpParser::respond(
     response << "Keep-Alive: timeout=30\r\n";
   }
 
-  response << "content-length: " << body.size() + 2 << "\r\n";
-  response << "Content-Type: " << mimeType << "; charset=utf-8"
-           << "\r\n";
-  response << "Server: kleinsHTTP"
-           << "\r\n";
+  response << "content-length: " << body.size() + 2 << "\r\n"
+           << "Content-Type: " << mimeType << "; charset=utf-8 \r\n"
+           << "Server: kleinsHTTP\r\n";
 
-  response << "\r\n" << body << "\r\n";
+  if (sessionKey) {
+    response << "Set-Cookie: KLEINSHTTP-SESSION=" << *sessionKey << "; SameSite=Strict; HttpOnly";
+  };
+
+  response << "\r\n\r\n" << body << "\r\n";
 
   std::string finalTarget;
   finalTarget = response.str();

@@ -42,6 +42,10 @@ void kleins::tcpConnection::tick() {
   this->onRecieveCallback(std::unique_ptr<packet>(packetBuffer));
 }
 
-void kleins::tcpConnection::sendData(const char* data, int datalength) { send(connectionfd, data, datalength, 0); }
+void kleins::tcpConnection::sendData(const char* data, int datalength) {
+  send(connectionfd, data, datalength, 0);
+}
 
-void kleins::tcpConnection::close_socket() { close(connectionfd); }
+void kleins::tcpConnection::close_socket() {
+  close(connectionfd);
+}

@@ -33,7 +33,9 @@ kleins::sslSocket::sslSocket(const char* listenAddress, const int listenPort, co
   }
 }
 
-kleins::sslSocket::~sslSocket() { close(socketfd); }
+kleins::sslSocket::~sslSocket() {
+  close(socketfd);
+}
 
 bool kleins::sslSocket::tick() {
   int newConnection;

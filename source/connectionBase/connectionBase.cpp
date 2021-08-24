@@ -1,6 +1,7 @@
 #include "connectionBase.h"
 
-kleins::connectionBase::connectionBase() {}
+kleins::connectionBase::connectionBase() {
+}
 
 kleins::connectionBase::~connectionBase() {
   if (tickThread) {
@@ -8,7 +9,9 @@ kleins::connectionBase::~connectionBase() {
   }
 }
 
-void kleins::connectionBase::startOwnTickLoop() { tickThread = new std::thread(ownTickLoop, this); }
+void kleins::connectionBase::startOwnTickLoop() {
+  tickThread = new std::thread(ownTickLoop, this);
+}
 
 void kleins::connectionBase::ownTickLoop(connectionBase* connection) {
   while (connection->getAlive()) {
@@ -25,9 +28,13 @@ void kleins::connectionBase::join() {
   }
 }
 
-void kleins::connectionBase::setTimeout(unsigned int timeoutin) { timeout = timeoutin; }
+void kleins::connectionBase::setTimeout(unsigned int timeoutin) {
+  timeout = timeoutin;
+}
 
-void kleins::connectionBase::resetTimeoutTimer() { lastPacket = std::chrono::steady_clock::now(); }
+void kleins::connectionBase::resetTimeoutTimer() {
+  lastPacket = std::chrono::steady_clock::now();
+}
 
 bool kleins::connectionBase::getTimeout() {
   if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - lastPacket).count() > timeout) {

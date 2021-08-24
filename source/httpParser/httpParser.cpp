@@ -5,7 +5,8 @@ kleins::httpParser::httpParser(packet* httpdata, connectionBase* conn) {
   connsocket = conn;
 }
 
-kleins::httpParser::~httpParser() {}
+kleins::httpParser::~httpParser() {
+}
 
 bool kleins::httpParser::parse() {
   unsigned int nextline = 0;
@@ -197,7 +198,9 @@ void kleins::httpParser::parseURLencodedData(const char* rawData) {
   parseURLencodedData(rawData, length);
 }
 
-void kleins::httpParser::parseURLencodedData(std::string& rawData) { parseURLencodedData(rawData.c_str(), rawData.length()); }
+void kleins::httpParser::parseURLencodedData(std::string& rawData) {
+  parseURLencodedData(rawData.c_str(), rawData.length());
+}
 
 void kleins::httpParser::parseURLencodedData(const char* rawData, const int length) {
   enum parseState {

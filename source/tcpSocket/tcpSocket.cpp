@@ -7,7 +7,9 @@ kleins::tcpSocket::tcpSocket(const char* listenAddress, const int listenPort) {
   inet_aton(listenAddress, (in_addr*)&address.sin_addr.s_addr);
 }
 
-kleins::tcpSocket::~tcpSocket() { close(socketfd); }
+kleins::tcpSocket::~tcpSocket() {
+  close(socketfd);
+}
 
 bool kleins::tcpSocket::tick() {
   int newConnection;

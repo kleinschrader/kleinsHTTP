@@ -89,9 +89,12 @@ std::map<kleins::httpMethod, std::string> kleins::httpServer::methodLookup = {
     {kleins::httpMethod::OPTIONS, "OPTIONS"}, {kleins::httpMethod::TRACE, "TRACE"},   {kleins::httpMethod::PATCH, "PATCH"},
 };
 
-kleins::httpServer::httpServer(/* args */) {}
+kleins::httpServer::httpServer(/* args */) {
+}
 
-kleins::httpServer::~httpServer() { sockets.clear(); }
+kleins::httpServer::~httpServer() {
+  sockets.clear();
+}
 
 bool kleins::httpServer::addSocket(socketBase* socket) {
   sockets.push_back(std::unique_ptr<socketBase>(socket));
@@ -216,5 +219,5 @@ void kleins::httpServer::serveDirectory(const std::string& baseuri, const std::s
 }
 
 void kleins::httpServer::printVersion() {
-  std::cout << "kleinsHTTP Build: " << BUILD_VERSION << std::endl; 
+  std::cout << "kleinsHTTP Build: " << BUILD_VERSION << std::endl;
 }

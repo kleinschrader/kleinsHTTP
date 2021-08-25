@@ -147,16 +147,6 @@ void kleins::httpServer::newConnection(kleins::connectionBase* conn) {
   }).detach();
 }
 
-void kleins::httpServer::on(const std::string& method, const std::string& uri, const std::function<void(httpParser*)> callback) {
-  std::string ref;
-  ref.reserve(method.length() + uri.length() + 1);
-
-  ref = method;
-  ref.append(uri);
-
-  functionTable.insert(std::make_pair(ref, callback));
-}
-
 void kleins::httpServer::on(httpMethod method, const std::string& uri, const std::function<void(httpParser*)> callback) {
   std::string ref;
   ref.reserve(methodLookup[method].length() + uri.length() + 1);

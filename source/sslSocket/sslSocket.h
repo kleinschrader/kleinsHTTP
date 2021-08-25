@@ -10,8 +10,10 @@
 #include <sys/socket.h>
 #include <thread>
 
+#ifndef SINGLE_HEADER
 #include "../socketBase/socketBase.h"
 #include "../sslConnection/sslConnection.h"
+#endif
 
 namespace kleins {
 class sslSocket : public socketBase {

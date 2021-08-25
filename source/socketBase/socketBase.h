@@ -8,7 +8,9 @@
 #include <sys/socket.h>
 #include <thread>
 
+#ifndef SINGLE_HEADER
 #include "../connectionBase/connectionBase.h"
+#endif
 
 namespace kleins {
 

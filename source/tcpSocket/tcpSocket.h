@@ -8,8 +8,10 @@
 #include <sys/socket.h>
 #include <thread>
 
+#ifndef SINGLE_HEADER
 #include "../socketBase/socketBase.h"
 #include "../tcpConnection/tcpConnection.h"
+#endif
 
 namespace kleins {
 class tcpSocket : public socketBase {

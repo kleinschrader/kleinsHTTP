@@ -4,11 +4,15 @@
 #include <iostream>
 #include <map>
 #include <regex>
+#include <list>
 
+
+#ifndef SINGLE_HEADER
 #include "../connectionBase/connectionBase.h"
 #include "../httpServer/httpServer.h"
 #include "../packet/packet.h"
 #include "../sessionBase/sessionBase.h"
+#endif
 
 namespace kleins {
 class httpServer;

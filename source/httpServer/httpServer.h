@@ -6,11 +6,13 @@
 #include <list>
 #include <openssl/rand.h>
 
+#ifndef SINGLE_HEADER
 #include "../connectionBase/connectionBase.h"
 #include "../httpParser/httpParser.h"
 #include "../packet/packet.h"
 #include "../sessionBase/sessionBase.h"
 #include "../socketBase/socketBase.h"
+#endif
 
 #ifndef BUILD_VERSION
 #define BUILD_VERSION "UNKNOWN"

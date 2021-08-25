@@ -8,8 +8,10 @@
 #include <thread>
 #include <unistd.h>
 
+#ifndef SINGLE_HEADER
 #include "../connectionBase/connectionBase.h"
 #include "../packet/packet.h"
+#endif
 
 namespace kleins {
 class tcpConnection : public connectionBase {

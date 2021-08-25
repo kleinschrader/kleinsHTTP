@@ -1,8 +1,11 @@
-target/debug/*
-target/release/*
-!.blank
-example.o
-example.key
-example.crt
 .vscode
 docs/
+CMakeFiles
+cmake_install.cmake
+CMakeCache.txt
+libkleinsHTTP.a
+libkleinsHTTP.h
+libkleinsHTTP.so
+examples/simpleHelloWorld/simpleHelloWorld
+examples/httpsExample/httpsExample
+Makefile

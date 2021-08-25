@@ -1,3 +1,5 @@
+#define SINGLE_HEADER
+
 namespace kleins {
     class packet;
     class connectionBase;
@@ -6,4 +8,3 @@ namespace kleins {
     class socketBase;
     class sessionBase;
 }
-

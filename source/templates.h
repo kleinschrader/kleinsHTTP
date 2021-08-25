@@ -1,5 +1,7 @@
+#ifndef SINGLE_HEADER
 #include "httpParser/httpParser.h"
 #include "httpServer/httpServer.h"
+#endif
 
 template <class T> kleins::sessionBase* kleins::httpParser::startSession() {
   kleins::sessionBase* sb;

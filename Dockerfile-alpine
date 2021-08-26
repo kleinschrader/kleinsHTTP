@@ -1,0 +1,5 @@
+FROM alpine:3.14
+WORKDIR /WORKDIR
+RUN apk add --no-cache make cmake g++ openssl-dev
+COPY . .
+RUN cmake ./ && make && cp libkleinsHTTP.so libkleinsHTTP.a /usr/lib/ && cp libkleinsHTTP.h /usr/include

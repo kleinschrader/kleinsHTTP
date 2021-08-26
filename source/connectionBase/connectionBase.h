@@ -9,7 +9,9 @@
 #include <thread>
 #include <unistd.h>
 
+#ifndef SINGLE_HEADER
 #include "../packet/packet.h"
+#endif
 
 namespace kleins {
 class connectionBase {

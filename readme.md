@@ -63,4 +63,8 @@ Yes, check the example for more info.
 
 ### Can i use this project to serve static files.
 
-Only manually for now.
+Yes! Checkout [kleins::httpServer::serveDirectory](source/httpServer/httpServer.h:96)
+
+### Is there a docker image to base my project of?
+
+Yes. Its [kleinschrader/kleinsHTTP](https://hub.docker.com/repository/docker/kleinschrader/kleinshttp/)

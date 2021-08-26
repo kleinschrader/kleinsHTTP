@@ -4,17 +4,22 @@
 #include <filesystem>
 #include <fstream>
 #include <list>
+#include <openssl/rand.h>
 
+#ifndef SINGLE_HEADER
 #include "../connectionBase/connectionBase.h"
 #include "../httpParser/httpParser.h"
 #include "../packet/packet.h"
+#include "../sessionBase/sessionBase.h"
 #include "../socketBase/socketBase.h"
+#endif
 
 #ifndef BUILD_VERSION
 #define BUILD_VERSION "UNKNOWN"
 #endif
 
 namespace kleins {
+class httpParser;
 
 typedef enum httpMethod { GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH } httpMethod;
 
@@ -26,6 +31,13 @@ typedef enum httpMethod { GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE,
  */
 class httpServer {
 private:
+  std::map<std::string, sessionBase*> sessions;
+
+  std::thread* sessionCleanupThread;
+  static void cleanUpSessionLoop(httpServer* server);
+
+  bool keepRunning = true;
+
   std::list<std::unique_ptr<socketBase>> sockets;
 
   std::map<std::string, const std::function<void(httpParser*)>> functionTable;
@@ -48,23 +60,6 @@ public:
    * 
    */
   ~httpServer();
-
-  /**
-   * @brief Add an endpoint to the httpServer
-   * 
-   * @param method The method of the endpoint ('GET','POST','DELETE', etc...)
-   * @param uri The url to respond to on ('/', 'api/hello') 
-   * @param callback The callback function that gets triggered when a client acces it.
-   * 
-   * Example:
-   * 
-   * \code{.cpp}
-   * server.on("GET","/hello",[](httpParser* parser){
-   *    data->respond("200",{},"Hello!");
-   * });
-   * \endcode
-   */
-  void on(const std::string& method, const std::string& uri, const std::function<void(httpParser*)> callback);
 
   /**
    * @brief Add an endpoint to the httpServer
@@ -114,6 +109,8 @@ public:
    * 
    */
   void printVersion();
+
+  template <class T> sessionBase* startSession(std::string& authKey);
 };
 
 } // namespace kleins

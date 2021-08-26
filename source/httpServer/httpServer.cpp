@@ -90,9 +90,15 @@ std::map<kleins::httpMethod, std::string> kleins::httpServer::methodLookup = {
 };
 
 kleins::httpServer::httpServer(/* args */) {
+  sessionCleanupThread = new std::thread(cleanUpSessionLoop, this);
 }
 
 kleins::httpServer::~httpServer() {
+  keepRunning = false;
+
+  sessionCleanupThread->join();
+  delete sessionCleanupThread;
+
   sockets.clear();
 }
 
@@ -118,7 +124,7 @@ bool kleins::httpServer::addSocket(socketBase* socket) {
 void kleins::httpServer::newConnection(kleins::connectionBase* conn) {
 
   conn->onRecieveCallback = [this, conn](std::unique_ptr<kleins::packet> packet) {
-    auto parser = std::unique_ptr<kleins::httpParser>(new kleins::httpParser(packet.get(), conn));
+    auto parser = std::unique_ptr<kleins::httpParser>(new kleins::httpParser(packet.get(), conn, this));
 
     for (auto cb : this->functionTable) {
       parser->on(cb.first, cb.second);
@@ -139,16 +145,6 @@ void kleins::httpServer::newConnection(kleins::connectionBase* conn) {
     conn->join();
     delete conn;
   }).detach();
-}
-
-void kleins::httpServer::on(const std::string& method, const std::string& uri, const std::function<void(httpParser*)> callback) {
-  std::string ref;
-  ref.reserve(method.length() + uri.length() + 1);
-
-  ref = method;
-  ref.append(uri);
-
-  functionTable.insert(std::make_pair(ref, callback));
 }
 
 void kleins::httpServer::on(httpMethod method, const std::string& uri, const std::function<void(httpParser*)> callback) {
@@ -178,7 +174,7 @@ void kleins::httpServer::serve(const std::string& uri, const std::string& path) 
 
   fileLookup.insert(std::make_pair(uri, filedata));
 
-  on("GET", uri, [this](httpParser* parser) {
+  on(GET, uri, [this](httpParser* parser) {
     std::string extension = std::filesystem::path(parser->path).extension();
     std::string mimetype = mimeLookup[extension];
 
@@ -207,7 +203,7 @@ void kleins::httpServer::serveDirectory(const std::string& baseuri, const std::s
 
       std::string incompletePath = ((std::string)p.path().parent_path()).substr(path.length());
       if (incompletePath.length() != 0) {
-        on("GET", incompletePath, [](httpParser* parser) {
+        on(GET, incompletePath, [](httpParser* parser) {
           std::string locationHeader = "Location: " + parser->path + "/";
           parser->respond("301", {locationHeader}, "");
         });
@@ -220,4 +216,27 @@ void kleins::httpServer::serveDirectory(const std::string& baseuri, const std::s
 
 void kleins::httpServer::printVersion() {
   std::cout << "kleinsHTTP Build: " << BUILD_VERSION << std::endl;
+}
+
+void kleins::httpServer::cleanUpSessionLoop(httpServer* server) {
+  while (server->keepRunning) {
+
+    std::map<std::string, sessionBase*>::iterator it = server->sessions.begin();
+
+    auto currentTime = std::chrono::system_clock::now();
+
+    while (it != server->sessions.end()) {
+      sessionBase* sb = it->second;
+
+      if (sb->expireTime < currentTime) {
+        server->sessions.erase(it);
+
+        delete sb;
+      }
+
+      it++;
+    }
+
+    usleep(5000000);
+  }
 }

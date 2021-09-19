@@ -9,3 +9,6 @@ libkleinsHTTP.so
 examples/simpleHelloWorld/simpleHelloWorld
 examples/httpsExample/httpsExample
 Makefile
+build.ninja
+.ninja_deps
+.ninja_log

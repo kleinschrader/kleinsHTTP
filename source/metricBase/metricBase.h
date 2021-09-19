@@ -9,8 +9,8 @@ namespace metrics {
 
 class metricBase {
 private:
-  char* helpString = "";
-  char* nameString = "";
+  const char* helpString = "";
+  const char* nameString = "";
 
 public:
   metricBase(/* args */);

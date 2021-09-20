@@ -8,7 +8,7 @@ namespace kleins {
 namespace metrics {
 
 class metricBase {
-private:
+protected:
   const char* helpString = "";
   const char* nameString = "";
 

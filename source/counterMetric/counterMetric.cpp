@@ -15,7 +15,7 @@ const char* kleins::metrics::counterMetric::getType() {
 std::unique_ptr<char*> kleins::metrics::counterMetric::construct() {
   char* targetBuffer = new char[4096];
 
-  snprintf(targetBuffer, 4096, "# HELP %s %s\r\n# TYPE %s %s\r\n%s %i\r\n", nameString, helpString, nameString, getType(), nameString, counterValue);
+  snprintf(targetBuffer, 4096, "# HELP %s %s\n# TYPE %s %s\n%s %i\n", nameString, helpString, nameString, getType(), nameString, counterValue);
 
   return std::make_unique<char*>(targetBuffer);
 };

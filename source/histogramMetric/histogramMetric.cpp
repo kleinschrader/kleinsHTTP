@@ -56,8 +56,8 @@ kleins::metrics::counterBucketMetricData* kleins::metrics::histogramMetric::oper
 
 std::unique_ptr<char*> kleins::metrics::histogramMetric::construct() {
   std::stringstream ss;
-  ss << "# HELP " << nameString << ' ' << helpString << "\r\n"
-     << "# TYPE " << nameString << ' ' << getType() << "\r\n";
+  ss << "# HELP " << nameString << ' ' << helpString << "\n"
+     << "# TYPE " << nameString << ' ' << getType() << "\n";
 
   for (auto x : counterValues) {
     ss << nameString << '{' << x.first << "} " << x.second->get() << "\r\n";

@@ -113,7 +113,7 @@ void kleins::httpParser::respond(
     response << "Keep-Alive: timeout=30\r\n";
   }
 
-  response << "content-length: " << body.size() + 2 << "\r\n"
+  response << "content-length: " << body.size() << "\r\n"
            << "Content-Type: " << mimeType << "; charset=utf-8 \r\n"
            << "Server: kleinsHTTP\r\n";
 
@@ -121,7 +121,7 @@ void kleins::httpParser::respond(
     response << "Set-Cookie: KLEINSHTTP-SESSION=" << *sessionKey << "; SameSite=Strict; HttpOnly\r\n";
   };
 
-  response << "\r\n" << body << "\r\n";
+  response << "\r\n" << body;
 
   std::string finalTarget;
   finalTarget = response.str();

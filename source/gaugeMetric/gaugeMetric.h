@@ -1,5 +1,5 @@
-#ifndef COUNTERMETRIC_H
-#define COUNTERMETRIC_H
+#ifndef GAUGEMETRIC_H
+#define GAUGEMETRIC_H
 
 #include <cassert>
 #include <stdio.h>
@@ -12,18 +12,16 @@ namespace kleins {
 
 namespace metrics {
 
-class counterMetric : public metricBase {
+class gaugeMetric : public metricBase {
 private:
   uint64_t counterValue = 0;
 
 public:
-  counterMetric(const char* name, const char* help);
-  ~counterMetric();
+  gaugeMetric(const char* name, const char* help);
+  ~gaugeMetric();
 
   uint64_t get();
   void set(uint64_t value);
-  void inc(uint64_t value = 1);
-  void reset();
 
   virtual const char* getType();
 

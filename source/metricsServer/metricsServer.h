@@ -3,16 +3,23 @@
 
 #ifndef SINGLE_HEADER
 #include "../httpServer/httpServer.h"
+#include "../metricBase/metricBase.h"
+
 #endif
 
 namespace kleins {
 
 namespace metrics {
 
-class metricsServer : public httpServer {
+class metricsServer : public kleins::httpServer {
 private:
   /* data */
+
+  std::list<metricBase*> metrics;
+
 public:
+  void addMetric(metricBase* metric);
+
   metricsServer(/* args */);
   ~metricsServer();
 };

@@ -8,10 +8,14 @@
 
 #ifndef SINGLE_HEADER
 #include "../connectionBase/connectionBase.h"
+#include "../counterMetric/counterMetric.h"
+#include "../gaugeMetric/gaugeMetric.h"
+#include "../histogramMetric/histogramMetric.h"
 #include "../httpParser/httpParser.h"
 #include "../packet/packet.h"
 #include "../sessionBase/sessionBase.h"
 #include "../socketBase/socketBase.h"
+#include "../tcpSocket/tcpSocket.h"
 #endif
 
 #ifndef BUILD_VERSION
@@ -19,6 +23,7 @@
 #endif
 
 namespace kleins {
+
 class httpParser;
 
 typedef enum httpMethod { GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH } httpMethod;
@@ -47,6 +52,13 @@ private:
 
   static std::map<std::string, std::string> mimeLookup;
   static std::map<httpMethod, std::string> methodLookup;
+
+  httpServer* mServer = 0;
+
+  metrics::counterMetric* metric_totalAcccess = 0;
+  metrics::histogramMetric* metric_access = 0;
+  metrics::counterMetric* metric_totalSessions = 0;
+  metrics::gaugeMetric* metric_activeSessions = 0;
 
 public:
   /**
@@ -110,9 +122,13 @@ public:
    */
   void printVersion();
 
+  void startMetricsServer(uint16_t port);
+
+  metrics::counterMetric* metric_notfound = 0;
+
   template <class T> sessionBase* startSession(std::string& authKey);
 };
 
-} // namespace kleins
+}; // namespace kleins
 
 #endif

@@ -37,6 +37,9 @@ template <class T> kleins::sessionBase* kleins::httpServer::startSession(std::st
 
   auto ins = sessions.insert(std::make_pair(std::string(newKey), sb));
 
+  metric_totalSessions->inc();
+  metric_activeSessions->set(metric_activeSessions->get() + 1);
+
   sb->sessionKey = &ins.first->first;
 
   return sb;

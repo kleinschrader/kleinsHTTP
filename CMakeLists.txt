@@ -26,7 +26,9 @@ SET(libsrc
 ./source/sslConnection/sslConnection.cpp
 ./source/metricsServer/metricsServer.cpp
 ./source/metricBase/metricBase.cpp
-./source/counterMetric/counterMetric.cpp)
+./source/counterMetric/counterMetric.cpp
+./source/histogramMetric/histogramMetric.cpp
+./source/gaugeMetric/gaugeMetric.cpp)
 
 SET(libhead
 ./source/socketBase/socketBase.h
@@ -42,6 +44,8 @@ SET(libhead
 ./source/metricsServer/metricsServer.h
 ./source/metricBase/metricBase.h
 ./source/counterMetric/counterMetric.h
+./source/histogramMetric/histogramMetric.h
+./source/gaugeMetric/gaugeMetric.h
 ./source/templates.h)
 
 ADD_LIBRARY(kleinsHTTP-shared SHARED "${libsrc}")

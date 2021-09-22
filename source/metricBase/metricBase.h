@@ -18,8 +18,8 @@ public:
 
   virtual const char* getType() = 0;
 
-  void setHelp(char* help);
-  void setName(char* name);
+  void setHelp(const char* help);
+  void setName(const char* name);
 
   virtual std::unique_ptr<char*> construct() = 0;
 };

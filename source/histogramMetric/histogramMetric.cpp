@@ -60,7 +60,7 @@ std::unique_ptr<char*> kleins::metrics::histogramMetric::construct() {
      << "# TYPE " << nameString << ' ' << getType() << "\n";
 
   for (auto x : counterValues) {
-    ss << nameString << '{' << x.first << "} " << x.second->get() << "\r\n";
+    ss << nameString << '{' << x.first << "} " << x.second->get() << "\n";
   }
   int totalLength = ss.str().length();
 

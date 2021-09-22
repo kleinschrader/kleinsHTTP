@@ -1,7 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name
-PROJECT(kleinsHTTP VERSION 0.2.0)
+PROJECT(kleinsHTTP VERSION 0.3.0)
+
+option (FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." FALSE)
+
+if (${FORCE_COLORED_OUTPUT})
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+       add_compile_options (-fdiagnostics-color=always)
+    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+       add_compile_options (-fcolor-diagnostics)
+    endif ()
+endif ()
 
 SET(libsrc
 ./source/sslSocket/sslSocket.cpp
@@ -13,7 +23,12 @@ SET(libsrc
 ./source/sessionBase/sessionBase.cpp
 ./source/tcpConnection/tcpConnection.cpp
 ./source/connectionBase/connectionBase.cpp
-./source/sslConnection/sslConnection.cpp)
+./source/sslConnection/sslConnection.cpp
+./source/metricsServer/metricsServer.cpp
+./source/metricBase/metricBase.cpp
+./source/counterMetric/counterMetric.cpp
+./source/histogramMetric/histogramMetric.cpp
+./source/gaugeMetric/gaugeMetric.cpp)
 
 SET(libhead
 ./source/socketBase/socketBase.h
@@ -26,6 +41,11 @@ SET(libhead
 ./source/sessionBase/sessionBase.h
 ./source/tcpConnection/tcpConnection.h
 ./source/sslConnection/sslConnection.h
+./source/metricsServer/metricsServer.h
+./source/metricBase/metricBase.h
+./source/counterMetric/counterMetric.h
+./source/histogramMetric/histogramMetric.h
+./source/gaugeMetric/gaugeMetric.h
 ./source/templates.h)
 
 ADD_LIBRARY(kleinsHTTP-shared SHARED "${libsrc}")

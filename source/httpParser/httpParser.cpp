@@ -71,11 +71,14 @@ bool kleins::httpParser::parse() {
   if (search != functionTable.end()) {
     search->second(this);
   } else {
+    if (server->metric_notfound) {
+      server->metric_notfound->inc();
+    }
     connsocket->sendData(
         "HTTP/1.0 404\r\ncontent-type:text/html; "
-        "charset=UTF-8\r\n\r\n<html><head></head><body>Not "
+        "charset=UTF-8\r\nContent-Length: 51\r\n\r\n<html><head></head><body>Not "
         "found</body></html>\r\n",
-        104);
+        127);
   }
 
   return true;

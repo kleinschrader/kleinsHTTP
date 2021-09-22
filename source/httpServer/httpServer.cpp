@@ -1,4 +1,5 @@
 #include "httpServer.h"
+#include "../metricsServer/metricsServer.h"
 
 std::map<std::string, std::string> kleins::httpServer::mimeLookup = {
 
@@ -94,6 +95,14 @@ kleins::httpServer::httpServer(/* args */) {
 }
 
 kleins::httpServer::~httpServer() {
+  if (mServer != 0) {
+    delete mServer;
+    delete metric_totalAcccess;
+    delete metric_notfound;
+    delete metric_totalSessions;
+    delete metric_activeSessions;
+  }
+
   keepRunning = false;
 
   sessionCleanupThread->join();
@@ -154,6 +163,19 @@ void kleins::httpServer::on(httpMethod method, const std::string& uri, const std
   ref = methodLookup[method];
   ref.append(uri);
 
+  if (mServer) {
+
+    std::string handler = "handler=\"" + uri + "\"";
+    metric_access->addBucket(handler.c_str());
+
+    functionTable.insert(std::make_pair(ref, [this, callback](httpParser* parser) {
+      metric_totalAcccess->inc();
+      std::string handler = "handler=\"" + parser->path + "\"";
+      (*metric_access)[handler.c_str()]->inc();
+      callback(parser);
+    }));
+    return;
+  }
   functionTable.insert(std::make_pair(ref, callback));
 }
 
@@ -231,6 +253,8 @@ void kleins::httpServer::cleanUpSessionLoop(httpServer* server) {
       if (sb->expireTime < currentTime) {
         server->sessions.erase(it);
 
+        server->metric_activeSessions->set(server->metric_activeSessions->get() - 1);
+
         delete sb;
       }
 
@@ -239,4 +263,21 @@ void kleins::httpServer::cleanUpSessionLoop(httpServer* server) {
 
     usleep(5000000);
   }
+}
+
+void kleins::httpServer::startMetricsServer(uint16_t port) {
+  metric_totalAcccess = new metrics::counterMetric("total_accesses", "The total ammount of access done to this server");
+  metric_access = new metrics::histogramMetric("access", "What urls were accessed");
+  metric_notfound = new metrics::counterMetric("total_notfound", "The total ammount of 404 Erros");
+  metric_activeSessions = new metrics::gaugeMetric("active_sessions", "The ammount of currently active sessions");
+  metric_totalSessions = new metrics::counterMetric("total_sessions", "The total ammount of sessions");
+
+  mServer = new metrics::metricsServer;
+  mServer->addSocket(new kleins::tcpSocket("0.0.0.0", port));
+
+  ((metrics::metricsServer*)mServer)->addMetric(metric_totalAcccess);
+  ((metrics::metricsServer*)mServer)->addMetric(metric_access);
+  ((metrics::metricsServer*)mServer)->addMetric(metric_notfound);
+  ((metrics::metricsServer*)mServer)->addMetric(metric_activeSessions);
+  ((metrics::metricsServer*)mServer)->addMetric(metric_totalSessions);
 }

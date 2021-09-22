@@ -118,10 +118,10 @@ void kleins::httpParser::respond(
            << "Server: kleinsHTTP\r\n";
 
   if (sessionKey) {
-    response << "Set-Cookie: KLEINSHTTP-SESSION=" << *sessionKey << "; SameSite=Strict; HttpOnly";
+    response << "Set-Cookie: KLEINSHTTP-SESSION=" << *sessionKey << "; SameSite=Strict; HttpOnly\r\n";
   };
 
-  response << "\r\n\r\n" << body << "\r\n";
+  response << "\r\n" << body << "\r\n";
 
   std::string finalTarget;
   finalTarget = response.str();

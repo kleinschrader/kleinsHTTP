@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name
-PROJECT(kleinsHTTP VERSION 0.3.0)
+PROJECT(kleinsHTTP VERSION 0.3.1)
 
 option (FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." FALSE)
 

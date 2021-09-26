@@ -54,7 +54,7 @@ kleins::metrics::counterBucketMetricData* kleins::metrics::histogramMetric::oper
   return 0;
 }
 
-std::unique_ptr<char*> kleins::metrics::histogramMetric::construct() {
+const char*  kleins::metrics::histogramMetric::construct() {
   std::stringstream ss;
   ss << "# HELP " << nameString << ' ' << helpString << "\n"
      << "# TYPE " << nameString << ' ' << getType() << "\n";
@@ -62,10 +62,11 @@ std::unique_ptr<char*> kleins::metrics::histogramMetric::construct() {
   for (auto x : counterValues) {
     ss << nameString << '{' << x.first << "} " << x.second->get() << "\n";
   }
-  int totalLength = ss.str().length();
+  std::string constructedString = ss.str();
+  int totalLength = constructedString.length()+1;
 
   char* outputBuffer = new char[totalLength];
-  std::memcpy(outputBuffer, ss.str().c_str(), totalLength);
+  std::memcpy(outputBuffer, constructedString.c_str(), totalLength);
 
-  return std::make_unique<char*>(outputBuffer);
+  return outputBuffer;
 };

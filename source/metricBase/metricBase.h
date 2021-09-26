@@ -21,7 +21,7 @@ public:
   void setHelp(const char* help);
   void setName(const char* name);
 
-  virtual std::unique_ptr<char*> construct() = 0;
+  virtual const char* construct() = 0;
 };
 
 } // namespace metrics

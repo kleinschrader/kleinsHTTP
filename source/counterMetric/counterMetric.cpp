@@ -12,12 +12,12 @@ const char* kleins::metrics::counterMetric::getType() {
   return "counter";
 }
 
-std::unique_ptr<char*> kleins::metrics::counterMetric::construct() {
+const char* kleins::metrics::counterMetric::construct() {
   char* targetBuffer = new char[4096];
 
   snprintf(targetBuffer, 4096, "# HELP %s %s\n# TYPE %s %s\n%s %i\n", nameString, helpString, nameString, getType(), nameString, counterValue);
 
-  return std::make_unique<char*>(targetBuffer);
+  return targetBuffer;
 };
 
 uint64_t kleins::metrics::counterMetric::get() {

@@ -27,7 +27,7 @@ public:
 
   virtual const char* getType();
 
-  virtual std::unique_ptr<char*> construct();
+  virtual const char* construct();
 };
 
 } // namespace metrics

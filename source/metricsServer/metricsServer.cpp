@@ -5,7 +5,9 @@ kleins::metrics::metricsServer::metricsServer(/* args */) {
     std::stringstream ss;
 
     for (auto x : metrics) {
-      ss << (const char*)(*x->construct().get());
+      const char* metricValue = x->construct();
+      ss << metricValue;
+      delete[] metricValue;
     }
 
     parser->respond("200", {"Cache-Control: no-cache"}, ss.str(), "text/plain");

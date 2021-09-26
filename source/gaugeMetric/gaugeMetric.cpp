@@ -12,12 +12,12 @@ const char* kleins::metrics::gaugeMetric::getType() {
   return "gauge";
 }
 
-std::unique_ptr<char*> kleins::metrics::gaugeMetric::construct() {
+const char* kleins::metrics::gaugeMetric::construct() {
   char* targetBuffer = new char[4096];
 
   snprintf(targetBuffer, 4096, "# HELP %s %s\n# TYPE %s %s\n%s %i\n", nameString, helpString, nameString, getType(), nameString, counterValue);
 
-  return std::make_unique<char*>(targetBuffer);
+  return targetBuffer;
 };
 
 uint64_t kleins::metrics::gaugeMetric::get() {

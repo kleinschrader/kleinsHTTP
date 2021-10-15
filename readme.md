@@ -37,7 +37,7 @@ Move libkleinsHTTP.so to `/usr/lib/`
 
 ## Example:
 
-Check out [example.cpp](./example.cpp) on how to use this libary.
+Check out [SimpleExample](./examples/simpleHelloWorld/main.cpp) on how to use this libary.
 
 (I'm still working on better documentaion. Sorry!)
 
